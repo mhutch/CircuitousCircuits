@@ -14,4 +14,20 @@ public class Puzzle : Node2D
         x.Position = new Vector2(480, 480);
         AddChild(x);
     }
+
+    CellInfo[,] grid = new CellInfo[5, 5];
+
+    public CellInfo? GetCellFromPosition(Vector2 position)
+    {
+        return null;
+    }
+
 }
+
+public struct CellInfo
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+    public PuzzleTileHex Tile { get; set; }
+}
+

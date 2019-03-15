@@ -2,7 +2,7 @@
 
 public class PuzzleTileHex : Node2D
 {
-    float radius = 60;
+    const float radius = 60;
 
     bool isUnderMouse;
     bool isDragging;
@@ -58,23 +58,32 @@ public class PuzzleTileHex : Node2D
 
     void HandleDrag()
     {
-        if (isUnderMouse && !isDragging)
+        if (!isDragging)
         {
+            if (!isUnderMouse)
+            {
+                return;
+            }
+
             isDragging = Input.IsActionPressed("left_click");
             mouseOffset = Position - GetViewport().GetMousePosition();
         }
 
-        if (isDragging)
+        if (!Input.IsActionPressed("left_click"))
         {
-            if (!Input.IsActionPressed("left_click"))
-            {
-                isDragging = false;
-            }
-            else
-            {
-                Position = GetViewport().GetMousePosition() + mouseOffset;
-            }
+            isDragging = false;
+            OnDrop();
+            return;
         }
+
+        Position = GetViewport().GetMousePosition() + mouseOffset;
+
+        var puzzle = (Puzzle)GetParent();
+        var cell = puzzle.GetCellFromPosition(Position);
+    }
+
+    void OnDrop ()
+    {
     }
 
     public void OnMouseEntered()
