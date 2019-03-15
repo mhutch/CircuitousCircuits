@@ -12,19 +12,20 @@ Theme: Circuitous
 
 ## TODO
 
-* Bootstrap
-* Game name
-* Get drag and drop working
+* ~~Bootstrap~~
+* ~~Get drag and drop working~~
 * Grid snapping
 * Tile definitions
+* Tile rotation
 * Disallowed drops
 * Win/fail detection
 * Music
 * Sound effects
 * Win/fail effect
 * Tile art
-* Level system
+* Game name
 * Splash screen
+* Level system
 * Puzzles
 * More tile variety?
 * Keyboard controls?
