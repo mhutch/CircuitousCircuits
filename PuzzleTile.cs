@@ -9,8 +9,6 @@ public class PuzzleTile : Sprite
 
     public override void _Process(float delta)
     {
-        GD.Print("PRESSED " + Input.IsActionPressed("left_click"));
-
         if (isUnderMouse && !isDragging)
         {
             isDragging = Input.IsActionPressed("left_click");
@@ -30,20 +28,13 @@ public class PuzzleTile : Sprite
         }
     }
 
-    public override void _Ready()
-    {
-        base._Ready();
-    }
-
     public void OnMouseEntered()
     {
-        GD.Print("ENTER");
         isUnderMouse = true;
     }
 
     public void OnMouseExited()
     {
-        GD.Print("EXIT");
         isUnderMouse = false;
     }
 }
