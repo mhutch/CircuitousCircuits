@@ -10,8 +10,8 @@ public class Puzzle : Node2D
         instance.Position = new Vector2(240, 480);
         AddChild(instance);
 
-        instance = (PuzzleTile)scene.Instance();
-        instance.Position = new Vector2(480, 480);
-        AddChild(instance);
+        var x = new PuzzleTileHex();
+        x.Position = new Vector2(480, 480);
+        AddChild(x);
     }
 }
