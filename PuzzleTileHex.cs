@@ -1,4 +1,5 @@
 ﻿using Godot;
+using Settworks.Hexagons;
 
 public class PuzzleTileHex : Node2D
 {
@@ -46,6 +47,15 @@ public class PuzzleTileHex : Node2D
         dragArea.ShapeOwnerAddShape(ownerId, shape);
     }
 
+    public void MakeFixed ()
+    {
+        RemoveChild(dragArea);
+        dragArea.QueueFree();
+        dragArea = null;
+    }
+
+    public bool IsDraggable => dragArea != null;
+
     public override void _Process(float delta)
     {
         if (dragArea != null)
@@ -78,17 +88,42 @@ public class PuzzleTileHex : Node2D
         }
 
         Position = GetViewport().GetMousePosition()/GlobalScale + mouseOffset;
-        GetPuzzle().ShowCursor(Position);
+        var coord = HexCoord.AtPosition(Position);
+
+        var puzzle = GetPuzzle();
+        var mapCell = puzzle.GetMapCell(coord);
+        if (!IsValidDrop(mapCell))
+        {
+            puzzle.HideCursor();
+            return;
+        }
+
+        puzzle.ShowCursor(coord);
     }
+
+    bool IsValidDrop(CellInfo? mapCell) => mapCell != null && !(mapCell.Value.Tile is PuzzleTileHex);
 
     Puzzle GetPuzzle() => (Puzzle) GetParent();
 
     void OnDrop()
     {
-        ZIndex = oldZIndex;
         var puzzle = GetPuzzle();
-        puzzle.SnapTileToCell(this);
+
+        ZIndex = oldZIndex;
         puzzle.HideCursor();
+
+        var coord = HexCoord.AtPosition(Position);
+        var mapCell = puzzle.GetMapCell(coord);
+
+        if (IsValidDrop(mapCell))
+        {
+            MakeFixed();
+            puzzle.DropTile(this, coord);
+        }
+        else
+        {
+            puzzle.ResetTile(this);
+        }
     }
 
     public void OnMouseEntered()

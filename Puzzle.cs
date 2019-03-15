@@ -1,4 +1,4 @@
-using Godot;
+﻿using Godot;
 using Settworks.Hexagons;
 using System;
 
@@ -7,14 +7,28 @@ public class Puzzle : Node2D
     public const float PuzzleScale = 50;
 
     Sprite hexCursor;
+    Tween snapTween;
+
+    readonly HexCoord spawnCoord = new HexCoord(8, 0);
 
     public override void _Ready()
     {
-        this.Scale = new Vector2 (PuzzleScale, PuzzleScale);
-        this.Position = new Vector2(0, PuzzleScale * 1.5f);
+        Scale = new Vector2 (PuzzleScale, PuzzleScale);
+        Position = new Vector2(0, PuzzleScale * 1.5f);
 
         base._Ready();
 
+        CreateCursor();
+        InitializeMap(4);
+
+        snapTween = new Tween();
+        AddChild(snapTween);
+
+        SpawnTile();
+    }
+
+    void CreateCursor ()
+    {
         hexCursor = new Sprite();
         hexCursor.Texture = (Texture)GD.Load("res://TileCursor.png");
         var textureHeight = hexCursor.Texture.GetHeight();
@@ -23,12 +37,6 @@ public class Puzzle : Node2D
         hexCursor.ZIndex = 1;
         hexCursor.Visible = false;
         AddChild(hexCursor);
-
-        var x = new PuzzleTileHex();
-        x.Position = new Vector2(4, 4);
-        AddChild(x);
-
-        InitializeMap(4);
     }
 
     Sprite AddCellFill (HexCoord c)
@@ -60,12 +68,12 @@ public class Puzzle : Node2D
             {
                 var q = j - offset;
                 var tile = AddCellFill(new HexCoord(q, r));
-                arr[j] = new CellInfo { Q = q, R = q, Tile = tile };
+                arr[j] = new CellInfo (q, r, tile);
             }
         }
     }
 
-    CellInfo? GetMapCell (HexCoord c)
+    public CellInfo? GetMapCell (HexCoord c)
     {
         if (c.r >= 0 && c.r < map.Length)
         {
@@ -80,15 +88,16 @@ public class Puzzle : Node2D
         return null;
     }
 
-    public void ShowCursor(Vector2 position)
+    void SetMapCell(HexCoord c, CellInfo info)
     {
-        var coord = HexCoord.AtPosition(position);
-        var mapCell = GetMapCell(coord);
-        if (mapCell == null) // || mapCell.Value.Tile != null)
-        {
-            hexCursor.Visible = false;
-            return;
-        }
+        var row = map[c.r];
+        int edgeSize = (map.Length + 1) / 2;
+        var index = c.q - Math.Max(0, edgeSize - 1 - c.r);
+        row[index] = info;
+    }
+
+    public void ShowCursor(HexCoord coord)
+    {
         hexCursor.Position = coord.Position();
         hexCursor.Visible = true;
     }
@@ -98,17 +107,41 @@ public class Puzzle : Node2D
         hexCursor.Visible = false;
     }
 
-    public void SnapTileToCell (PuzzleTileHex tile)
+    void SnapTileToCell (PuzzleTileHex tile, HexCoord coord)
     {
-        var coord = HexCoord.AtPosition(tile.Position);
-        tile.Position = coord.Position();
+        snapTween.InterpolateProperty(tile, "position", null, coord.Position(), 0.1f, Tween.TransitionType.Cubic, Tween.EaseType.Out, 0);
+        snapTween.Start();
     }
+
+    public void SpawnTile ()
+    {
+        var x = new PuzzleTileHex();
+        x.Position = spawnCoord.Position();
+        AddChild(x);
+    }
+
+    public void DropTile (PuzzleTileHex tile, HexCoord coord)
+    {
+        SetMapCell(coord, new CellInfo(coord.q, coord.r, tile));
+        SnapTileToCell(tile, coord);
+        GD.Print($"Snapping drop to {coord}");
+        SpawnTile();
+    }
+
+    public void ResetTile(PuzzleTileHex tile) => SnapTileToCell(tile, spawnCoord);
 }
 
 public struct CellInfo
 {
-    public int Q { get; set; }
-    public int R { get; set; }
-    public Node2D Tile { get; set; }
+    public CellInfo (int q, int r, Node2D tile)
+    {
+        Q = q;
+        R = r;
+        Tile = tile;
+    }
+
+    public int Q { get; }
+    public int R { get;}
+    public Node2D Tile { get; }
 }
 
