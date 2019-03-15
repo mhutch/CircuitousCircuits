@@ -2,8 +2,6 @@
 
 public class PuzzleTileHex : Node2D
 {
-    const float radius = 60;
-
     bool isUnderMouse;
     bool isDragging;
     Vector2 mouseOffset;
@@ -17,8 +15,8 @@ public class PuzzleTileHex : Node2D
 
         sprite = new Sprite();
         sprite.Texture = (Texture)GD.Load("res://HexTile.png");
-        var textureWidth = sprite.Texture.GetWidth();
-        float scale = radius * 2f / textureWidth;
+        var textureHeight = sprite.Texture.GetHeight();
+        float scale = 2f / textureHeight;
         sprite.Scale = new Vector2(scale, scale);
         AddChild(sprite);
 
@@ -36,12 +34,12 @@ public class PuzzleTileHex : Node2D
         var shape = new ConvexPolygonShape2D();
         shape.SetPoints(new Vector2[]
         {
-            new Vector2 (0, -radius),
-            new Vector2 (radius, -radius/2),
-            new Vector2 (radius, radius/2),
-            new Vector2 (0, radius),
-            new Vector2 (-radius, radius/2),
-            new Vector2 (-radius, -radius/2),
+            new Vector2 (0, -1f),
+            new Vector2 (1f, -0.5f),
+            new Vector2 (1f, 0.5f),
+            new Vector2 (0, 1f),
+            new Vector2 (-1f, 0.5f),
+            new Vector2 (-1f, -5f),
         });
 
         var ownerId = dragArea.CreateShapeOwner(dragArea);
@@ -56,6 +54,8 @@ public class PuzzleTileHex : Node2D
         }
     }
 
+    int oldZIndex;
+
     void HandleDrag()
     {
         if (!isDragging)
@@ -66,7 +66,8 @@ public class PuzzleTileHex : Node2D
             }
 
             isDragging = Input.IsActionPressed("left_click");
-            mouseOffset = Position - GetViewport().GetMousePosition();
+            mouseOffset = Position - GetViewport().GetMousePosition()/GlobalScale;
+            ZIndex = 1000;
         }
 
         if (!Input.IsActionPressed("left_click"))
@@ -76,14 +77,18 @@ public class PuzzleTileHex : Node2D
             return;
         }
 
-        Position = GetViewport().GetMousePosition() + mouseOffset;
-
-        var puzzle = (Puzzle)GetParent();
-        var cell = puzzle.GetCellFromPosition(Position);
+        Position = GetViewport().GetMousePosition()/GlobalScale + mouseOffset;
+        GetPuzzle().ShowCursor(Position);
     }
 
-    void OnDrop ()
+    Puzzle GetPuzzle() => (Puzzle) GetParent();
+
+    void OnDrop()
     {
+        ZIndex = oldZIndex;
+        var puzzle = GetPuzzle();
+        puzzle.SnapTileToCell(this);
+        puzzle.HideCursor();
     }
 
     public void OnMouseEntered()

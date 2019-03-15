@@ -264,7 +264,6 @@ namespace Settworks.Hexagons
         /// The two polar bounding corners are those whose polar angles form the widest arc.
         /// </remarks>
         /// <param name="CCW">If set to <c>true</c>, gets the counterclockwise bounding corner.</param>
-        /// <param name="neighbor">If set to <c>true</c>, gets the other corner shared by the same ring-neighbor as normal return.</param>
         public int PolarBoundingCornerIndex(bool CCW = false)
         {
             if (q == 0 && r == 0) return 0;
