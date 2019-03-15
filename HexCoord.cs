@@ -19,7 +19,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using UnityEngine;
+using Godot;
 using System;
 using System.Collections.Generic;
 
@@ -39,13 +39,11 @@ namespace Settworks.Hexagons
 
         /// <summary>
         /// Position on the q axis.
-        /// </summary>
-        [SerializeField]
+        /// </summary>]
         public int q;
         /// <summary>
         /// Position on the r axis.
         /// </summary>
-        [SerializeField]
         public int r;
 
         /// <summary>
@@ -126,8 +124,8 @@ namespace Settworks.Hexagons
         /// </summary>
         public float PolarAngle()
         {
-            Vector3 pos = Position();
-            return (float)Math.Atan2(pos.y, pos.x);
+            Vector2 pos = Position();
+            return Mathf.Atan2(pos.y, pos.x);
         }
 
         /// <summary>
@@ -232,7 +230,7 @@ namespace Settworks.Hexagons
         public float CornerPolarAngle(int index)
         {
             Vector2 pos = Corner(index);
-            return (float)Math.Atan2(pos.y, pos.x);
+            return Mathf.Atan2(pos.y, pos.x);
         }
 
         /// <summary>
@@ -433,10 +431,10 @@ namespace Settworks.Hexagons
         public bool IsOnCartesianLine(Vector2 a, Vector2 b)
         {
             Vector2 AB = b - a;
-            bool bias = Vector3.Cross(AB, Corner(0) - a).z > 0;
+            bool bias = AB.Cross3 (Corner(0) - a).z > 0;
             for (int i = 1; i < 6; i++)
             {
-                if (bias != (Vector3.Cross(AB, Corner(i) - a).z > 0))
+                if (bias != (AB.Cross3 (Corner(i) - a).z > 0))
                     return true;
             }
             return false;
@@ -448,15 +446,15 @@ namespace Settworks.Hexagons
         public bool IsOnCartesianLineSegment(Vector2 a, Vector2 b)
         {
             Vector2 AB = b - a;
-            float mag = AB.sqrMagnitude;
+            float mag = AB.LengthSquared();
             Vector2 AC = Corner(0) - a;
-            bool within = AC.sqrMagnitude <= mag && Vector2.Dot(AB, AC) >= 0;
-            int sign = Math.Sign(Vector3.Cross(AB, AC).z);
+            bool within = AC.LengthSquared() <= mag && AB.Dot(AC) >= 0;
+            int sign = Math.Sign(AB.Cross3 (AC).z);
             for (int i = 1; i < 6; i++)
             {
                 AC = Corner(i) - a;
-                bool newWithin = AC.sqrMagnitude <= mag && Vector2.Dot(AB, AC) >= 0;
-                int newSign = Math.Sign(Vector3.Cross(AB, AC).z);
+                bool newWithin = AC.LengthSquared() <= mag && AB.Dot(AC) >= 0;
+                int newSign = Math.Sign(AB.Cross3(AC).z);
                 if ((within || newWithin) && (sign * newSign <= 0))
                     return true;
                 within = newWithin;
@@ -469,11 +467,11 @@ namespace Settworks.Hexagons
         /// Returns a <see cref="System.String"/> that represents the current <see cref="Settworks.Hexagons.HexCoord"/>.
         /// </summary>
         /// <remarks>
-        /// Matches the formatting of <see cref="UnityEngine.Vector2.ToString()"/>.
+        /// Matches the formatting of <see cref="Godot.Vector2.ToString()"/>.
         /// </remarks>
         public override string ToString()
         {
-            return "(" + q + "," + r + ")";
+            return "(" + q + ", " + r + ")";
         }
 
         /*
@@ -483,7 +481,7 @@ namespace Settworks.Hexagons
         /// <summary>
         /// HexCoord at (0,0)
         /// </summary>
-        public static readonly HexCoord origin = default(HexCoord);
+        public static readonly HexCoord origin;
 
         /// <summary>
         /// Distance between two hexes.
@@ -494,7 +492,7 @@ namespace Settworks.Hexagons
         }
 
         /// <summary>
-        /// Normalize a rotation index within 0 <= index < cycle.
+        /// Normalize a rotation index within 0 &lt;= index &lt; cycle.
         /// </summary>
         public static int NormalizeRotationIndex(int index, int cycle = 6)
         {
@@ -650,7 +648,7 @@ namespace Settworks.Hexagons
         /// <param name="angle">Desired polar angle.</param>
         public static int FindPolarIndex(int radius, float angle)
         {
-            return (int)Math.Round(angle * radius * 3 / Mathf.PI);
+            return (int)Math.Round(angle * radius * 3 / (float)Math.PI);
         }
 
         /// <summary>
@@ -749,8 +747,8 @@ namespace Settworks.Hexagons
         public static bool operator !=(HexCoord a, HexCoord b)
         { return a.q != b.q || a.r != b.r; }
         // Mandatory overrides: Equals(), GetHashCode()
-        public override bool Equals(object o)
-        { return (o is HexCoord) && this == (HexCoord)o; }
+        public override bool Equals(object obj)
+        { return (obj is HexCoord) && this == (HexCoord)obj; }
         public override int GetHashCode()
         {
             return q & (int)0xFFFF | r << 16;
@@ -763,7 +761,7 @@ namespace Settworks.Hexagons
         /// <summary>
         /// One sixth of a full rotation (radians).
         /// </summary>
-        public static readonly float SEXTANT = Mathf.PI / 3;
+        public static readonly float SEXTANT = (float)Math.PI / 3;
 
         /// <summary>
         /// Square root of 3.
@@ -785,9 +783,9 @@ namespace Settworks.Hexagons
             new Vector2(Mathf.Sin(SEXTANT), Mathf.Cos(SEXTANT)),
             new Vector2(0, 1),
             new Vector2(Mathf.Sin(-SEXTANT), Mathf.Cos(-SEXTANT)),
-            new Vector2(Mathf.Sin(Mathf.PI + SEXTANT), Mathf.Cos(Mathf.PI - SEXTANT)),
+            new Vector2(Mathf.Sin((float)Math.PI + SEXTANT), Mathf.Cos((float)Math.PI - SEXTANT)),
             new Vector2(0, -1),
-            new Vector2(Mathf.Sin(Mathf.PI - SEXTANT), Mathf.Cos(Mathf.PI - SEXTANT))
+            new Vector2(Mathf.Sin((float)Math.PI - SEXTANT), Mathf.Cos((float)Math.PI - SEXTANT))
         };
 
         // Vector transformations between QR and XY space.
@@ -797,5 +795,12 @@ namespace Settworks.Hexagons
         static readonly Vector2 X_QR = new Vector2(SQRT3 / 3, 0);
         static readonly Vector2 Y_QR = new Vector2(-1 / 3f, 2 / 3f);
 
+    }
+
+    //work around Godot's lack of implicit Vector2->Vector3 cast
+    static class Vec2
+    {
+        public static Vector3 ToVec3(this Vector2 vec) => new Vector3(vec.x, vec.y, 0);
+        public static Vector3 Cross3(this Vector2 v1, Vector2 v2) => new Vector3(v1.x, v1.y, 0).Cross(new Vector3(v2.x, v2.y, 0));
     }
 }
