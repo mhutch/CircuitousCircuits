@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/3_swells_loop.ogg-f80eb3e90f3abf958f2ddef73254f297.oggstr"
+
+[deps]
+
+source_file="res://Music/3_swells_loop.ogg"
+dest_files=[ "res://.import/3_swells_loop.ogg-f80eb3e90f3abf958f2ddef73254f297.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

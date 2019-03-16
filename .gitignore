@@ -3,4 +3,5 @@ export.cfg
 export_presets.cfg
 .mono/
 .vs/
+.DS_Store
 mono_crash*

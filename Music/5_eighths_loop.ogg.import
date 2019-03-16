@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/5_eighths_loop.ogg-d5f74ba4083b2e3143efafd5337e7211.oggstr"
+
+[deps]
+
+source_file="res://Music/5_eighths_loop.ogg"
+dest_files=[ "res://.import/5_eighths_loop.ogg-d5f74ba4083b2e3143efafd5337e7211.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

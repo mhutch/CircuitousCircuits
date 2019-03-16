@@ -21,6 +21,8 @@ public class PuzzleTileHex : Node2D
         sprite.Scale = new Vector2(scale, scale);
         AddChild(sprite);
 
+        ZIndex = (int)ZLayers.DroppedTile;
+
         MakeDraggable();
     }
 
@@ -78,7 +80,7 @@ public class PuzzleTileHex : Node2D
             isDragging = Input.IsActionPressed("left_click");
             mouseOffset = Position - GetViewport().GetMousePosition()/GlobalScale;
             oldZIndex = ZIndex;
-            ZIndex = 1000;
+            ZIndex = (int)ZLayers.DragTile;
         }
 
         if (!Input.IsActionPressed("left_click"))
