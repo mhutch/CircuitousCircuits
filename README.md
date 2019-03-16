@@ -30,14 +30,8 @@ Theme: Circuitous
 * More tile variety?
 * Keyboard controls?
 * Upcoming tile preview?
-
-
-TILE DEFINITION:
-
-
-1-
-2
-3
-4
-5
-6
+* pulse circuit when complete
+  * all other lines disappear
+* quit button
+* fullscreen
+* tinting

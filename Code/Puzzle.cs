@@ -154,8 +154,8 @@ public class Puzzle : Node2D
 
 enum ZLayers
 {
-    Background,
-    Cursor,
-    DroppedTile,
-    DragTile
+    Background = 0,
+    Cursor = 100,
+    DroppedTile = 200,
+    DragTile = 300
 }

@@ -28,6 +28,21 @@ public class PuzzleTileHex : Node2D
 
         snapTween = new Tween();
         AddChild(snapTween);
+
+        AddLines();
+    }
+
+    void AddLines ()
+    {
+        var lines = new Sprite();
+        lines.Texture = (Texture)GD.Load("res://Tiles/largeCurve.png");
+        var textureHeight = lines.Texture.GetHeight();
+        float scale = 2f / textureHeight;
+        lines.Scale = new Vector2(scale, scale);
+        lines.ZAsRelative = true;
+        lines.ZIndex = 1;
+        lines.Modulate = Colors.Aquamarine;
+        AddChild(lines);
     }
 
     public void MakeDraggable()
