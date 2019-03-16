@@ -11,5 +11,5 @@ dest_files=[ "res://.import/2_bass_loop.ogg-85f90bfaf2c37c33b56eefa35663dcd9.ogg
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0

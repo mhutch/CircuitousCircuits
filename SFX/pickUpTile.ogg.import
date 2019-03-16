@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/pickUpTile.ogg-6189d34fcef28df501ed0eb942317cd3.oggstr"
+
+[deps]
+
+source_file="res://SFX/pickUpTile.ogg"
+dest_files=[ "res://.import/pickUpTile.ogg-6189d34fcef28df501ed0eb942317cd3.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

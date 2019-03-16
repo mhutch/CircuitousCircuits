@@ -22,7 +22,7 @@ public class Puzzle : Node2D
         CreateCursor();
 
         Map = new HexMap(4);
-        Map.Initialize(c => new CellInfo(c, AddCellFill (c)));
+        Map.Initialize(c => new CellInfo(c, AddBoardCell (c)));
 
         snapTween = new Tween();
         AddChild(snapTween);
@@ -35,25 +35,33 @@ public class Puzzle : Node2D
 
     void CreateCursor ()
     {
-        hexCursor = new Sprite();
-        hexCursor.Texture = (Texture)GD.Load("res://Tiles/TileCursor.png");
-        var textureHeight = hexCursor.Texture.GetHeight();
+        var texture = Resources.Textures.Cursor;
+        var textureHeight = texture.GetHeight();
         float scale = 2f / textureHeight;
-        hexCursor.Scale = new Vector2(scale, scale);
-        hexCursor.ZIndex = (int)ZLayers.Cursor;
-        hexCursor.Visible = false;
+
+        hexCursor = new Sprite
+        {
+            Texture = texture,
+            Scale = new Vector2(scale, scale),
+            ZIndex = (int)ZLayers.Cursor,
+            Visible = false
+        };
         AddChild(hexCursor);
     }
 
-    Sprite AddCellFill (HexCoord c)
+    Sprite AddBoardCell (HexCoord c)
     {
-        var s = new Sprite();
-        s.Texture = (Texture)GD.Load("res://Tiles/TileBoard.png");
-        var textureHeight = s.Texture.GetHeight();
+        var texture = Resources.Textures.Board;
+        var textureHeight = texture.GetHeight();
         float scale = 2f / textureHeight;
-        s.Scale = new Vector2(scale, scale);
-        s.ZIndex = (int)ZLayers.Background;
-        s.Position = c.Position();
+
+        var s = new Sprite
+        {
+            Texture = texture,
+            Scale = new Vector2(scale, scale),
+            ZIndex = (int)ZLayers.Background,
+            Position = c.Position()
+        };
         AddChild(s);
         return s;
     }
@@ -78,24 +86,20 @@ public class Puzzle : Node2D
         hexCursor.Visible = false;
     }
 
-    void SnapTileToCell (PuzzleTileHex tile, HexCoord coord)
+    public void SnapTileToCell (PuzzleTileHex tile, HexCoord coord)
     {
         snapTween.InterpolateProperty(tile, "position", null, coord.Position(), 0.1f, Tween.TransitionType.Cubic, Tween.EaseType.Out, 0);
         snapTween.Start();
     }
 
+    int tileID = 0;
+
     public void SpawnTile ()
     {
         var x = new PuzzleTileHex();
+        x.Name = "${}";
         x.Position = spawnCoord.Position();
         AddChild(x);
-    }
-
-    public void DropTile (PuzzleTileHex tile, HexCoord coord)
-    {
-        Map.SetCell(new CellInfo(coord, tile));
-        SnapTileToCell(tile, coord);
-        SpawnTile();
     }
 
     public void ResetTile(PuzzleTileHex tile) => SnapTileToCell(tile, spawnCoord);
@@ -105,22 +109,20 @@ public class Puzzle : Node2D
 
     void LoadMusic ()
     {
-        string[] musicLayerResources = {
-            "res://Music/1_melody_loop.ogg",
-            "res://Music/2_bass_loop.ogg",
-            "res://Music/3_swells_loop.ogg",
-            "res://Music/4_decoration_loop.ogg",
-            "res://Music/5_eighths_loop.ogg",
+        AudioStreamOGGVorbis[] musicLayerResources = {
+            Resources.Music.Melody,
+            Resources.Music.Bass,
+            Resources.Music.Swells,
+            Resources.Music.Decoration,
+            Resources.Music.Eighths
         };
 
         musicLayers = new AudioStreamPlayer[musicLayerResources.Length];
         for (int i = 0; i < musicLayers.Length; i++)
         {
-            var stream = GD.Load<AudioStreamOGGVorbis>(musicLayerResources[i]);
-            stream.Loop = false;
             var player = new AudioStreamPlayer
             {
-                Stream = stream
+                Stream = musicLayerResources[i]
             };
             AddChild(player);
             musicLayers[i] = player;

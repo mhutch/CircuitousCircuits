@@ -11,5 +11,5 @@ dest_files=[ "res://.import/4_decoration_loop.ogg-84c3a2aa716eec28f0746932075a7a
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0

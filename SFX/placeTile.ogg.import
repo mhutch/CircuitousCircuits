@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/placeTile.ogg-b5d05f19754bddba46059242976e8593.oggstr"
+
+[deps]
+
+source_file="res://SFX/placeTile.ogg"
+dest_files=[ "res://.import/placeTile.ogg-b5d05f19754bddba46059242976e8593.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

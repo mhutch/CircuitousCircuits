@@ -11,5 +11,5 @@ dest_files=[ "res://.import/5_eighths_loop.ogg-d5f74ba4083b2e3143efafd5337e7211.
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0

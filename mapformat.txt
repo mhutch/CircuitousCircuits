@@ -1,0 +1,15 @@
+map is a text file
+
+first line is grid size (edge length) e.g.
+4
+
+each following line is a tile position and description
+e.g.
+0,3|015432
+
+hexes are pointy top, zero is bottom left
+
+blank cell simply has no description, only location, e.g.
+4,1|
+
+levels are numbered in order e.g. 1.txt, 2.txt

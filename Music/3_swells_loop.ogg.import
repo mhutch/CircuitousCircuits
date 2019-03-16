@@ -11,5 +11,5 @@ dest_files=[ "res://.import/3_swells_loop.ogg-f80eb3e90f3abf958f2ddef73254f297.o
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0

@@ -55,6 +55,7 @@
     <Compile Include="Code\PuzzleTileHex.cs" />
     <Compile Include="Code\CellInfo.cs" />
     <Compile Include="Code\HexMap.cs" />
+    <Compile Include="Code\Resources.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

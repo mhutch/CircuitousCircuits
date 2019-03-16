@@ -16,9 +16,7 @@ public class PuzzleTileHex : Node2D
     {
         base._Ready();
 
-        sprite = AddSprite(
-            (Texture)GD.Load("res://Tiles/HexTile.png")
-        );
+        sprite = AddSprite(Resources.Textures.Tile);
 
         ZIndex = (int)ZLayers.DroppedTile;
 
@@ -67,16 +65,16 @@ public class PuzzleTileHex : Node2D
             switch (delta)
             {
                 case 0:
-                    texture = (Texture)GD.Load("res://Tiles/stop.png");
+                    texture = Resources.Textures.Stop;
                     break;
                 case 1:
-                    texture = (Texture)GD.Load("res://Tiles/smallCurve.png");
+                    texture = Resources.Textures.CurveSmall;
                     break;
                 case 2:
-                    texture = (Texture)GD.Load("res://Tiles/largeCurve.png");
+                    texture = Resources.Textures.CurveLarge;
                     break;
                 case 3:
-                    texture = (Texture)GD.Load("res://Tiles/line.png");
+                    texture = Resources.Textures.Line;
                     break;
                 default:
                     throw new InvalidOperationException();
@@ -194,15 +192,17 @@ public class PuzzleTileHex : Node2D
         var coord = HexCoord.AtPosition(Position);
         var mapCell = puzzle.Map.TryGetCell(coord);
 
-        if (IsValidDrop(mapCell))
-        {
-            MakeFixed();
-            puzzle.DropTile(this, coord);
-        }
-        else
+        if (!IsValidDrop(mapCell))
         {
             puzzle.ResetTile(this);
+            return;
         }
+
+        MakeFixed();
+
+        puzzle.Map.SetCell(new CellInfo(coord, this));
+        puzzle.SnapTileToCell(this, coord);
+        puzzle.SpawnTile();
     }
 
     public void OnMouseEntered()
