@@ -16,10 +16,10 @@ Theme: Circuitous
 * ~~Get drag and drop working~~
 * ~~Grid snapping~~
 * ~~Tile definitions~~
-* Tile rotation
-* Disallowed drops
+* ~~Tile rotation~~
+* ~~Disallowed drops~~
 * Win/fail detection
-* Music
+* ~~Music~~
 * Sound effects
 * Win/fail effect
 * Tile art
@@ -30,3 +30,14 @@ Theme: Circuitous
 * More tile variety?
 * Keyboard controls?
 * Upcoming tile preview?
+
+
+TILE DEFINITION:
+
+
+1-
+2
+3
+4
+5
+6

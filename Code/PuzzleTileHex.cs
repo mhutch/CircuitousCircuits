@@ -9,6 +9,7 @@ public class PuzzleTileHex : Node2D
 
     Sprite sprite;
     Area2D dragArea;
+    Tween snapTween;
 
     public override void _Ready()
     {
@@ -24,6 +25,9 @@ public class PuzzleTileHex : Node2D
         ZIndex = (int)ZLayers.DroppedTile;
 
         MakeDraggable();
+
+        snapTween = new Tween();
+        AddChild(snapTween);
     }
 
     public void MakeDraggable()
@@ -58,11 +62,26 @@ public class PuzzleTileHex : Node2D
 
     public bool IsDraggable => dragArea != null;
 
+    // this is true for now
+    public bool HasFocus => IsDraggable;
+
     public override void _Process(float delta)
     {
-        if (dragArea != null)
+        if (IsDraggable)
         {
             HandleDrag();
+        }
+
+        if (HasFocus)
+        {
+            if (Input.IsActionJustPressed("rotate_right"))
+            {
+                RotateRight();
+            }
+            else if (Input.IsActionJustPressed("rotate_left"))
+            {
+                RotateLeft();
+            }
         }
     }
 
@@ -137,5 +156,40 @@ public class PuzzleTileHex : Node2D
     public void OnMouseExited()
     {
         isUnderMouse = false;
+    }
+
+    public int[] Connections = new int[6];
+
+    public void RotateRight()
+    {
+        rotations++;
+        int tmp = Connections[5];
+        for (int i = 1; i < Connections.Length; i++)
+        {
+            Connections[i] = Connections[i-1];
+        }
+        Connections[0] = tmp;
+        AnimateRotation();
+    }
+
+    public void RotateLeft()
+    {
+        rotations--;
+        int tmp = Connections[0];
+        for (int i = 0; i < Connections.Length - 1; i++)
+        {
+            Connections[i] = Connections[i + 1];
+        }
+        Connections[5] = tmp;
+        AnimateRotation();
+    }
+
+    int rotations;
+
+    void AnimateRotation()
+    {
+        var newRotation = rotations * Mathf.Pi / 3f;
+        snapTween.InterpolateProperty(this, "rotation", null, newRotation, 0.2f, Tween.TransitionType.Cubic, Tween.EaseType.Out, 0);
+        snapTween.Start();
     }
 }
