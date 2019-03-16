@@ -9,6 +9,7 @@ public class PuzzleTileHex : Node2D
     Vector2 mouseOffset;
 
     Sprite sprite;
+
     Area2D dragArea;
     Tween snapTween;
 
@@ -152,9 +153,16 @@ public class PuzzleTileHex : Node2D
             }
 
             isDragging = Input.IsActionPressed("left_click");
+            if (!isDragging)
+            {
+                return;
+            }
+
             mouseOffset = Position - GetViewport().GetMousePosition()/GlobalScale;
             oldZIndex = ZIndex;
             ZIndex = (int)ZLayers.DragTile;
+
+            OnStartDrag();
         }
 
         if (!Input.IsActionPressed("left_click"))
@@ -182,6 +190,11 @@ public class PuzzleTileHex : Node2D
 
     Puzzle GetPuzzle() => (Puzzle) GetParent();
 
+    void OnStartDrag()
+    {
+        GetPuzzle().SoundPlayerPickup.Play(0);
+    }
+
     void OnDrop()
     {
         var puzzle = GetPuzzle();
@@ -194,9 +207,12 @@ public class PuzzleTileHex : Node2D
 
         if (!IsValidDrop(mapCell))
         {
+            GetPuzzle().SoundPlayerWhoosh.Play(0);
             puzzle.ResetTile(this);
             return;
         }
+
+        GetPuzzle().SoundPlayerDrop.Play(0);
 
         MakeFixed();
 
@@ -219,6 +235,8 @@ public class PuzzleTileHex : Node2D
 
     public void RotateRight()
     {
+        GetPuzzle().SoundPlayerRotate.Play(0);
+
         rotations++;
         int tmp = Connections[5];
         for (int i = 1; i < Connections.Length; i++)
@@ -231,6 +249,8 @@ public class PuzzleTileHex : Node2D
 
     public void RotateLeft()
     {
+        GetPuzzle().SoundPlayerRotate.Play(0);
+
         rotations--;
         int tmp = Connections[0];
         for (int i = 0; i < Connections.Length - 1; i++)

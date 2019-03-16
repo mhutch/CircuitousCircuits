@@ -1,6 +1,7 @@
 ﻿using System;
 using Godot;
 
+//GODOT: could we autogenerate these, or at least constants for the IDs
 public static class Resources
 {
     public static class Textures
@@ -8,8 +9,8 @@ public static class Resources
         public static Texture Tile = GD.Load<Texture>("res://Tiles/HexTile.png");
         public static Texture Board = GD.Load<Texture>("res://Tiles/TileBoard.png");
         public static Texture Cursor = GD.Load<Texture>("res://Tiles/TileCursor.png");
-        public static Texture CurveLarge = GD.Load<Texture>("res://Tiles/curveLarge.png");
-        public static Texture CurveSmall = GD.Load<Texture>("res://Tiles/curveSmall.png");
+        public static Texture CurveLarge = GD.Load<Texture>("res://Tiles/largeCurve.png");
+        public static Texture CurveSmall = GD.Load<Texture>("res://Tiles/smallCurve.png");
         public static Texture Line = GD.Load<Texture>("res://Tiles/line.png");
         public static Texture Stop = GD.Load<Texture>("res://Tiles/stop.png");
     }

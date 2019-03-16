@@ -799,7 +799,9 @@ namespace Settworks.Hexagons
     //work around Godot's lack of implicit Vector2->Vector3 cast
     static class Vec2
     {
+        //GODOT: vector2->vector3 cast, vector3 ctor that takes vector2 and z, vector2 ctor that uses one value for both
         public static Vector3 ToVec3(this Vector2 vec) => new Vector3(vec.x, vec.y, 0);
+        //GODOT: static versions of these functions can be useful
         public static Vector3 Cross3(this Vector2 v1, Vector2 v2) => new Vector3(v1.x, v1.y, 0).Cross(new Vector3(v2.x, v2.y, 0));
     }
 }

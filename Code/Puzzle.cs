@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using System;
+using Godot;
 using Settworks.Hexagons;
 
 public class Puzzle : Node2D
@@ -29,6 +30,7 @@ public class Puzzle : Node2D
 
         SpawnTile();
 
+        InitializeSound();
         LoadMusic();
         StartMusic();
     }
@@ -97,7 +99,7 @@ public class Puzzle : Node2D
     public void SpawnTile ()
     {
         var x = new PuzzleTileHex();
-        x.Name = "${}";
+        x.Name = "tile_${tileID++}";
         x.Position = spawnCoord.Position();
         AddChild(x);
     }
@@ -152,6 +154,36 @@ public class Puzzle : Node2D
             }
         }
     }
+
+    void InitializeSound()
+    {
+        AudioStreamPlayer CreatePlayer (AudioStreamOGGVorbis s)
+        {
+            //GODOT: would be nice if the ctor let us pass the stream in
+            //GODOT: not obvious what to do for one-shot effects. should i create as needed and destroy when they're done? should I pool players?
+            var p = new AudioStreamPlayer { Stream = s };
+            p.Autoplay = false;
+            s.Loop = false;
+            //GODOT: it would be REALLY nice if AddChild returned the child
+            AddChild(p);
+            return p;
+        }
+
+        SoundPlayerRotate = CreatePlayer(Resources.Sfx.RotateTile);
+        SoundPlayerDrop = CreatePlayer(Resources.Sfx.PlaceTile);
+        SoundPlayerWhoosh = CreatePlayer(Resources.Sfx.WhooshBack);
+        SoundPlayerPickup = CreatePlayer(Resources.Sfx.PickUpTile);
+        SoundPlayerComplete = CreatePlayer(Resources.Sfx.CircuitComplete);
+        SoundPlayerFail = CreatePlayer(Resources.Sfx.CircuitFail);
+    }
+
+
+    public AudioStreamPlayer SoundPlayerRotate { get; private set; }
+    public AudioStreamPlayer SoundPlayerDrop { get; private set; }
+    public AudioStreamPlayer SoundPlayerWhoosh { get; private set; }
+    public AudioStreamPlayer SoundPlayerPickup { get; private set; }
+    public AudioStreamPlayer SoundPlayerComplete { get; private set; }
+    public AudioStreamPlayer SoundPlayerFail { get; private set; }
 }
 
 enum ZLayers
