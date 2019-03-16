@@ -1,6 +1,5 @@
 ﻿using Godot;
 using Settworks.Hexagons;
-using System;
 
 public class Puzzle : Node2D
 {
@@ -11,6 +10,8 @@ public class Puzzle : Node2D
 
     readonly HexCoord spawnCoord = new HexCoord(8, 0);
 
+    public HexMap Map { get; private set; }
+
     public override void _Ready()
     {
         Scale = new Vector2 (PuzzleScale, PuzzleScale);
@@ -19,7 +20,9 @@ public class Puzzle : Node2D
         base._Ready();
 
         CreateCursor();
-        InitializeMap(4);
+
+        Map = new HexMap(4);
+        Map.Initialize(c => new CellInfo(c, AddCellFill (c)));
 
         snapTween = new Tween();
         AddChild(snapTween);
@@ -30,7 +33,7 @@ public class Puzzle : Node2D
     void CreateCursor ()
     {
         hexCursor = new Sprite();
-        hexCursor.Texture = (Texture)GD.Load("res://TileCursor.png");
+        hexCursor.Texture = (Texture)GD.Load("res://Tiles/TileCursor.png");
         var textureHeight = hexCursor.Texture.GetHeight();
         float scale = 2f / textureHeight;
         hexCursor.Scale = new Vector2(scale, scale);
@@ -42,7 +45,7 @@ public class Puzzle : Node2D
     Sprite AddCellFill (HexCoord c)
     {
         var s = new Sprite();
-        s.Texture = (Texture)GD.Load("res://TileBoard.png");
+        s.Texture = (Texture)GD.Load("res://Tiles/TileBoard.png");
         var textureHeight = s.Texture.GetHeight();
         float scale = 2f / textureHeight;
         s.Scale = new Vector2(scale, scale);
@@ -50,50 +53,6 @@ public class Puzzle : Node2D
         s.Position = c.Position();
         AddChild(s);
         return s;
-    }
-
-    CellInfo[][] map;
-
-    void InitializeMap (int edgeSize)
-    {
-        int size = edgeSize * 2 - 1;
-        map = new CellInfo[size][];
-
-        for (int r = 0; r < size; r++)
-        {
-            var arr = new CellInfo[size - Math.Abs(edgeSize - 1 - r)];
-            map[r] = arr;
-            int offset = -Math.Max(0, edgeSize - 1 - r);
-            for (int j = 0; j < arr.Length; j++)
-            {
-                var q = j - offset;
-                var tile = AddCellFill(new HexCoord(q, r));
-                arr[j] = new CellInfo (q, r, tile);
-            }
-        }
-    }
-
-    public CellInfo? GetMapCell (HexCoord c)
-    {
-        if (c.r >= 0 && c.r < map.Length)
-        {
-            var row = map[c.r];
-            int edgeSize = (map.Length + 1) / 2;
-            var index = c.q - Math.Max(0, edgeSize - 1 - c.r);
-            if (index >= 0 && index < row.Length)
-            {
-                return row[index];
-            }
-        }
-        return null;
-    }
-
-    void SetMapCell(HexCoord c, CellInfo info)
-    {
-        var row = map[c.r];
-        int edgeSize = (map.Length + 1) / 2;
-        var index = c.q - Math.Max(0, edgeSize - 1 - c.r);
-        row[index] = info;
     }
 
     public void ShowCursor(HexCoord coord)
@@ -122,7 +81,7 @@ public class Puzzle : Node2D
 
     public void DropTile (PuzzleTileHex tile, HexCoord coord)
     {
-        SetMapCell(coord, new CellInfo(coord.q, coord.r, tile));
+        Map.SetCell(new CellInfo(coord, tile));
         SnapTileToCell(tile, coord);
         GD.Print($"Snapping drop to {coord}");
         SpawnTile();
@@ -130,18 +89,3 @@ public class Puzzle : Node2D
 
     public void ResetTile(PuzzleTileHex tile) => SnapTileToCell(tile, spawnCoord);
 }
-
-public struct CellInfo
-{
-    public CellInfo (int q, int r, Node2D tile)
-    {
-        Q = q;
-        R = r;
-        Tile = tile;
-    }
-
-    public int Q { get; }
-    public int R { get;}
-    public Node2D Tile { get; }
-}
-

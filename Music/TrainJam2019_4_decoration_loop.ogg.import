@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/TrainJam2019_4_decoration_loop.ogg-869861fc7d1cfa7a827a35f55f4a8fa8.oggstr"
+
+[deps]
+
+source_file="res://Music/TrainJam2019_4_decoration_loop.ogg"
+dest_files=[ "res://.import/TrainJam2019_4_decoration_loop.ogg-869861fc7d1cfa7a827a35f55f4a8fa8.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

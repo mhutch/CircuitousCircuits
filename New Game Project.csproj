@@ -49,12 +49,12 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\Puzzle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Puzzle.cs" />
-    <Compile Include="PuzzleTile.cs" />
-    <Compile Include="Hex.cs" />
-    <Compile Include="HexCoord.cs" />
-    <Compile Include="PuzzleTileHex.cs" />
+    <Compile Include="Code\HexCoord.cs" />
+    <Compile Include="Code\PuzzleTileHex.cs" />
+    <Compile Include="Code\CellInfo.cs" />
+    <Compile Include="Code\HexMap.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -15,7 +15,7 @@ public class PuzzleTileHex : Node2D
         base._Ready();
 
         sprite = new Sprite();
-        sprite.Texture = (Texture)GD.Load("res://HexTile.png");
+        sprite.Texture = (Texture)GD.Load("res://Tiles/HexTile.png");
         var textureHeight = sprite.Texture.GetHeight();
         float scale = 2f / textureHeight;
         sprite.Scale = new Vector2(scale, scale);
@@ -77,6 +77,7 @@ public class PuzzleTileHex : Node2D
 
             isDragging = Input.IsActionPressed("left_click");
             mouseOffset = Position - GetViewport().GetMousePosition()/GlobalScale;
+            oldZIndex = ZIndex;
             ZIndex = 1000;
         }
 
@@ -91,7 +92,7 @@ public class PuzzleTileHex : Node2D
         var coord = HexCoord.AtPosition(Position);
 
         var puzzle = GetPuzzle();
-        var mapCell = puzzle.GetMapCell(coord);
+        var mapCell = puzzle.Map.TryGetCell(coord);
         if (!IsValidDrop(mapCell))
         {
             puzzle.HideCursor();
@@ -113,7 +114,7 @@ public class PuzzleTileHex : Node2D
         puzzle.HideCursor();
 
         var coord = HexCoord.AtPosition(Position);
-        var mapCell = puzzle.GetMapCell(coord);
+        var mapCell = puzzle.Map.TryGetCell(coord);
 
         if (IsValidDrop(mapCell))
         {

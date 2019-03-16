@@ -14,8 +14,8 @@ Theme: Circuitous
 
 * ~~Bootstrap~~
 * ~~Get drag and drop working~~
-* Grid snapping
-* Tile definitions
+* ~~Grid snapping~~
+* ~~Tile definitions~~
 * Tile rotation
 * Disallowed drops
 * Win/fail detection

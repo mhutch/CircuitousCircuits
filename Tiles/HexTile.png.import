@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/HexTile.png-9d2f0842fe98e0f7c184751c346611dd.stex"
+path="res://.import/HexTile.png-286bd3211d361d9f1d621336700e0eab.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://HexTile.png"
-dest_files=[ "res://.import/HexTile.png-9d2f0842fe98e0f7c184751c346611dd.stex" ]
+source_file="res://Tiles/HexTile.png"
+dest_files=[ "res://.import/HexTile.png-286bd3211d361d9f1d621336700e0eab.stex" ]
 
 [params]
 
