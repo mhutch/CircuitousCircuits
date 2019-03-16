@@ -26,15 +26,15 @@ public class PuzzleTileHex : Node2D
         snapTween = new Tween();
         AddChild(snapTween);
 
-        Connections = new[] {
-            //2, 1, 4, 3, 6, 5
-            4, 3, 1, 3, 0, 5
-        };
+        if (LineDescriptions == null)
+        {
+            LineDescriptions = new[] { 0, 1, 2, 3, 4, 5 };
+        }
 
         AddLines();
     }
 
-    Sprite AddSprite (Texture texture, int zindex = 0)
+    Sprite AddSprite(Texture texture, int zindex = 0)
     {
         var textureHeight = texture.GetHeight();
         float scale = 2f / textureHeight;
@@ -56,7 +56,7 @@ public class PuzzleTileHex : Node2D
     {
         for (int i = 0; i < 6; i++)
         {
-            var delta = Constrain(i - Connections[i]);
+            var delta = Constrain(i - LineDescriptions[i]);
             if (delta > 3)
             {
                 continue;
@@ -109,7 +109,7 @@ public class PuzzleTileHex : Node2D
         dragArea.ShapeOwnerAddShape(ownerId, shape);
     }
 
-    public void MakeFixed ()
+    public void MakeFixed()
     {
         RemoveChild(dragArea);
         dragArea.QueueFree();
@@ -158,7 +158,7 @@ public class PuzzleTileHex : Node2D
                 return;
             }
 
-            mouseOffset = Position - GetViewport().GetMousePosition()/GlobalScale;
+            mouseOffset = Position - GetViewport().GetMousePosition() / GlobalScale;
             oldZIndex = ZIndex;
             ZIndex = (int)ZLayers.DragTile;
 
@@ -172,7 +172,7 @@ public class PuzzleTileHex : Node2D
             return;
         }
 
-        Position = GetViewport().GetMousePosition()/GlobalScale + mouseOffset;
+        Position = GetViewport().GetMousePosition() / GlobalScale + mouseOffset;
         var coord = HexCoord.AtPosition(Position);
 
         var puzzle = GetPuzzle();
@@ -188,7 +188,7 @@ public class PuzzleTileHex : Node2D
 
     bool IsValidDrop(CellInfo? mapCell) => mapCell != null && !(mapCell.Value.Tile is PuzzleTileHex);
 
-    Puzzle GetPuzzle() => (Puzzle) GetParent();
+    Puzzle GetPuzzle() => (Puzzle)GetParent();
 
     void OnStartDrag()
     {
@@ -219,7 +219,25 @@ public class PuzzleTileHex : Node2D
         puzzle.Map.SetCell(new CellInfo(coord, this));
         puzzle.SnapTileToCell(this, coord);
         puzzle.SpawnTile();
+
+        for (int i = 0; i < directions.Length; i++)
+        {
+            var neighbor = puzzle.Map.TryGetCell(coord + directions[i]);
+            if (neighbor?.Tile is PuzzleTileHex t)
+            {
+                GD.Print($"{t.Name} is on side {i} of {Name}");
+            }
+        }
     }
+
+    static HexCoord[] directions = {
+        new HexCoord (-1,  1),
+        new HexCoord (-1,  0),
+        new HexCoord ( 0, -1),
+        new HexCoord ( 1, -1),
+        new HexCoord ( 1,  0),
+        new HexCoord ( 0,  1)
+    };
 
     public void OnMouseEntered()
     {
@@ -231,19 +249,14 @@ public class PuzzleTileHex : Node2D
         isUnderMouse = false;
     }
 
-    public int[] Connections = new int[6];
+    public int[] LineDescriptions = new int[6];
 
     public void RotateRight()
     {
         GetPuzzle().SoundPlayerRotate.Play(0);
 
         rotations++;
-        int tmp = Connections[5];
-        for (int i = 1; i < Connections.Length; i++)
-        {
-            Connections[i] = Constrain(Connections[i-1] + 1);
-        }
-        Connections[0] = Constrain(tmp + 1);
+        RotateDefinitionRight(LineDescriptions);
         AnimateRotation();
     }
 
@@ -252,12 +265,12 @@ public class PuzzleTileHex : Node2D
         GetPuzzle().SoundPlayerRotate.Play(0);
 
         rotations--;
-        int tmp = Connections[0];
-        for (int i = 0; i < Connections.Length - 1; i++)
+        int tmp = LineDescriptions[0];
+        for (int i = 0; i < LineDescriptions.Length - 1; i++)
         {
-            Connections[i] = Constrain(Connections[i + 1] - 1);
+            LineDescriptions[i] = Constrain(LineDescriptions[i + 1] - 1);
         }
-        Connections[5] = Constrain(tmp - 1);
+        LineDescriptions[5] = Constrain(tmp - 1);
         AnimateRotation();
     }
 
@@ -270,5 +283,52 @@ public class PuzzleTileHex : Node2D
         snapTween.Start();
     }
 
-    int Constrain(int i) => (i + 6) % 6;
+    static int Constrain(int i) => (i + 6) % 6;
+
+    static readonly int[][] tilesDefinitions = {
+        new[] { 0, 1, 2, 3, 4, 5 }, // all ends
+        new[] { 1, 0, 2, 3, 4, 5 }, // short and 4 ends
+        new[] { 1, 0, 3, 2, 4, 5 }, // 2 short, adjacent
+        new[] { 1, 0, 2, 4, 3, 5 }, // 2 short, ends between them
+        new[] { 1, 0, 3, 2, 5, 4 }, // 3 short
+
+        new[] { 2, 1, 0, 3, 4, 5 }, // 1 long
+        new[] { 2, 1, 0, 5, 4, 3 }, // 2 long opposite, 2 ends
+        new[] { 2, 3, 0, 1, 4, 5 }, // 2 long adjacent, 2 ends
+        new[] { 2, 3, 0, 1, 5, 4 }, // 2 long adjacent, 1 short
+        new[] { 2, 4, 0, 5, 1, 3 }, // 2 long opposite, 1 straight
+
+        new[] { 2, 1, 0, 4, 3, 5 }, // long, short, end
+        new[] { 2, 1, 0, 3, 5, 4 }, // long, end, short
+        new[] { 2, 4, 0, 3, 1, 5 }, // long, end, straight, end
+        new[] { 1, 0, 5, 4, 3, 2 }, // short, straight, short
+
+        new[] { 3, 4, 5, 0, 1, 2 }, // 3 straight
+        new[] { 3, 4, 2, 0, 1, 5 }, // 2 straight
+        new[] { 3, 1, 2, 0, 4, 5 }, // 1 straight
+    };
+
+    static Random random = new Random();
+
+    public static PuzzleTileHex GetRandomTile()
+    {
+        var idx = random.Next(0, tilesDefinitions.Length - 1);
+        var def = (int[])tilesDefinitions[idx].Clone();
+        var rotations = random.Next(0, 5);
+        for (int i = 0; i < rotations; i++)
+        {
+            RotateDefinitionRight(def);
+        }
+        return new PuzzleTileHex { LineDescriptions = def };
+    }
+
+    static void RotateDefinitionRight(int[] definition)
+    {
+        int tmp = definition[definition.Length - 1];
+        for (int i = definition.Length - 1; i > 0; i--)
+        {
+            definition[i] = Constrain(definition[i - 1] + 1);
+        }
+        definition[0] = Constrain(tmp + 1);
+    }
 }

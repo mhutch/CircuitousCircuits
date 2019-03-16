@@ -20,7 +20,8 @@ Theme: Circuitous
 * ~~Disallowed drops~~
 * Win/fail detection
 * ~~Music~~
-* Sound effects
+* ~~Sound effects~~
+* ~~Random tiles~~
 * Win/fail effect
 * Tile art
 * Game name

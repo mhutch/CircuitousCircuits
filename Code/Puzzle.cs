@@ -98,8 +98,8 @@ public class Puzzle : Node2D
 
     public void SpawnTile ()
     {
-        var x = new PuzzleTileHex();
-        x.Name = "tile_${tileID++}";
+        var x = PuzzleTileHex.GetRandomTile();
+        x.Name = $"tile_{tileID++}";
         x.Position = spawnCoord.Position();
         AddChild(x);
     }
