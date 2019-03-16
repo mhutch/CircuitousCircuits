@@ -18,21 +18,24 @@ Theme: Circuitous
 * ~~Tile definitions~~
 * ~~Tile rotation~~
 * ~~Disallowed drops~~
-* Win/fail detection
 * ~~Music~~
 * ~~Sound effects~~
 * ~~Random tiles~~
 * Win/fail effect
-* Tile art
+* ~~Tile art~~
+* ~~Puzzles~~
+* Win/fail detection
+* Level system
 * Game name
 * Splash screen
-* Level system
-* Puzzles
-* More tile variety?
+* quit button
+* fullscreen
+* tinting
+* color schemes
+
+stretch:
+
 * Keyboard controls?
 * Upcoming tile preview?
 * pulse circuit when complete
   * all other lines disappear
-* quit button
-* fullscreen
-* tinting

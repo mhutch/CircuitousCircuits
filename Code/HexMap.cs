@@ -1,6 +1,7 @@
 ﻿using Godot;
 using Settworks.Hexagons;
 using System;
+using System.Collections.Generic;
 
 public class HexMap
 {
@@ -17,7 +18,7 @@ public class HexMap
         }
     }
 
-    public void Initialize(Func<HexCoord,CellInfo> creator)
+    public void Initialize(Func<HexCoord, CellInfo> creator)
     {
         int edgeSize = (map.Length + 1) / 2;
         for (int r = 0; r < map.Length; r++)
@@ -26,7 +27,7 @@ public class HexMap
             int offset = -Math.Max(0, edgeSize - 1 - r);
             for (int j = 0; j < arr.Length; j++)
             {
-                arr[j] = creator (new HexCoord(j - offset, r));
+                arr[j] = creator(new HexCoord(j - offset, r));
             }
         }
     }
@@ -53,5 +54,20 @@ public class HexMap
             }
         }
         return null;
+    }
+
+    public IEnumerable<T> GetAllTiles<T>() where T : Node2D
+    {
+        for (int r = 0; r < map.Length; r++)
+        {
+            var arr = map[r];
+            for (int j = 0; j < arr.Length; j++)
+            {
+                if (arr[j].Tile is T t)
+                {
+                    yield return t;
+                }
+            }
+        }
     }
 }

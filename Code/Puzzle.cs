@@ -13,6 +13,9 @@ public class Puzzle : Node2D
 
     public HexMap Map { get; private set; }
 
+    int nextPathId = 1;
+    public int GetNextPathId() => nextPathId++;
+
     public override void _Ready()
     {
         Scale = new Vector2 (PuzzleScale, PuzzleScale);
