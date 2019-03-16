@@ -29,7 +29,7 @@ public class PuzzleTileHex : Node2D
 
         Connections = new[] {
             //2, 1, 4, 3, 6, 5
-            5, 3, 2, 4, 1, 6
+            4, 3, 1, 3, 0, 5
         };
 
         AddLines();
@@ -57,7 +57,7 @@ public class PuzzleTileHex : Node2D
     {
         for (int i = 0; i < 6; i++)
         {
-            var delta = ((i + 1) - Connections[i] + 6) % 6;
+            var delta = Constrain(i - Connections[i]);
             if (delta > 3)
             {
                 continue;
@@ -223,9 +223,9 @@ public class PuzzleTileHex : Node2D
         int tmp = Connections[5];
         for (int i = 1; i < Connections.Length; i++)
         {
-            Connections[i] = Connections[i-1];
+            Connections[i] = Constrain(Connections[i-1] + 1);
         }
-        Connections[0] = tmp;
+        Connections[0] = Constrain(tmp + 1);
         AnimateRotation();
     }
 
@@ -235,9 +235,9 @@ public class PuzzleTileHex : Node2D
         int tmp = Connections[0];
         for (int i = 0; i < Connections.Length - 1; i++)
         {
-            Connections[i] = Connections[i + 1];
+            Connections[i] = Constrain(Connections[i + 1] - 1);
         }
-        Connections[5] = tmp;
+        Connections[5] = Constrain(tmp - 1);
         AnimateRotation();
     }
 
@@ -249,4 +249,6 @@ public class PuzzleTileHex : Node2D
         snapTween.InterpolateProperty(this, "rotation", null, newRotation, 0.2f, Tween.TransitionType.Cubic, Tween.EaseType.Out, 0);
         snapTween.Start();
     }
+
+    int Constrain(int i) => (i + 6) % 6;
 }
