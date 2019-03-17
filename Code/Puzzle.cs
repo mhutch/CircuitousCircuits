@@ -47,7 +47,7 @@ public class Puzzle : Node2D
         }
         else if (Input.IsActionJustPressed("reset"))
         {
-            LoadLevel(currentLevel);
+            ResetLevel();
         }
     }
 
@@ -273,6 +273,8 @@ public class Puzzle : Node2D
         currentLevel = (currentLevel % levelCount) + 1;
         LoadLevel(currentLevel);
     }
+
+    public void ResetLevel () => LoadLevel(currentLevel);
 
     public void Rescale ()
     {

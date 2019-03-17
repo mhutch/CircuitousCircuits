@@ -25,11 +25,11 @@ Theme: Circuitous
 * ~~Tile art~~
 * ~~Puzzles~~
 * ~~Win detection~~
-* Fail detection
+* ~~Fail detection~~
 * ~~Level system~~
 * ~~Scaling/centering~~
-* Game name
-* Splash screen
+* ~~Game name~~
+* ~~Splash screen~~
 * ~~quit button~~
 * ~~fullscreen~~
 * tinting

@@ -225,6 +225,12 @@ public class PuzzleTileHex : Node2D
         puzzle.SpawnTile();
 
         CalculatePaths(puzzle, coord);
+
+        if (puzzle.Map.TileCount == puzzle.Map.CellCount)
+        {
+            puzzle.SoundPlayerFail.Play(09);
+            puzzle.ResetLevel();
+        }
     }
 
     public void CalculatePaths(Puzzle puzzle, HexCoord coord)

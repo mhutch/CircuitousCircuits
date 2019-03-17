@@ -16,6 +16,13 @@ public class HexMap
         {
             map[r] = (new CellInfo[size - Math.Abs(edgeSize - 1 - r)]);
         }
+
+        int cellCount = 0;
+        for (int i = edgeSize - 1; i > 0; i--)
+        {
+            cellCount += i;
+        }
+        CellCount = cellCount * 6 + 1;
     }
 
     public void Initialize(Func<HexCoord, CellInfo> creator)
@@ -39,6 +46,11 @@ public class HexMap
         int edgeSize = (map.Length + 1) / 2;
         var index = c.q - Math.Max(0, edgeSize - 1 - c.r);
         row[index] = info;
+
+        if (info.Tile is PuzzleTileHex)
+        {
+            TileCount++;
+        }
     }
 
     public CellInfo? TryGetCell(HexCoord c)
@@ -73,4 +85,6 @@ public class HexMap
 
     public int Size => map.Length + 1;
     public int EdgeSize => (map.Length + 1) / 2;
+    public int CellCount { get; }
+    public int TileCount { get; private set; }
 }
