@@ -224,7 +224,7 @@ public class PuzzleTileHex : Node2D
         puzzle.SnapTileToCell(this, coord);
         puzzle.SpawnTile();
 
-        PrintPath();
+        GD.Print($"Placing tile {Name} ({GetPathString()})");
 
         //propagate neighbor paths
         for (int side = 0; side < directions.Length; side++)
@@ -234,10 +234,10 @@ public class PuzzleTileHex : Node2D
             {
                 if (neighborCell.Value.Tile is PuzzleTileHex neighbor)
                 {
-                    GD.Print($"{neighbor.Name} is on side {side} of {Name}");
+                    GD.Print($"Side {side} neighbor is {neighbor.Name} ({neighbor.GetPathString()})");
                     //get the path id of the neighboring tile
                     var pathID = neighbor.Paths[(side + 3) % 6];
-                    GD.Print($"Incoming path ID: {pathID}");
+                    GD.Print($"Neighbor path ID is {pathID}");
                     PropagateIncomingPath(side, pathID);
                 }
             }
@@ -248,7 +248,9 @@ public class PuzzleTileHex : Node2D
         {
             if (Paths[side] == 0)
             {
-                Paths[side] = puzzle.GetNextPathId();
+                var id = puzzle.GetNextPathId();
+                Paths[side] = id;
+                Paths[LineDescriptions[side]] = id;
             }
         }
     }
@@ -269,7 +271,6 @@ public class PuzzleTileHex : Node2D
 
         //check the internal connection in this tile
         var connectedSide = LineDescriptions[side];
-        GD.Print($"Side {side} is internally connected to side {connectedSide}");
 
         //if it's a dead end, kill the path
         if (connectedSide == side)
@@ -277,6 +278,8 @@ public class PuzzleTileHex : Node2D
             PathDead(pathID);
             return;
         }
+
+        GD.Print($"Side {side} is internally connected to side {connectedSide}");
 
         var internalConnectedPath = Paths[connectedSide];
 
@@ -287,9 +290,10 @@ public class PuzzleTileHex : Node2D
             Paths[connectedSide] = pathID;
             PathIncrement(pathID);
         }
-        else
+        //if it wasn't handled by previous join, join it
+        else if (internalConnectedPath != pathID)
         {
-            PathJoin(Paths[connectedSide], pathID);
+            PathJoin(internalConnectedPath, pathID);
         }
 
     }
@@ -304,7 +308,10 @@ public class PuzzleTileHex : Node2D
         if (oldPath == newPath)
         {
             GD.Print("PATH 1 IS A CIRCUIT");
+            GetPuzzle().SoundPlayerComplete.Play(0);
+            return newPath;
         }
+
         foreach (var tile in GetPuzzle().Map.GetAllTiles<PuzzleTileHex>())
         {
             for (int i = 0; i < 6; i++)
@@ -321,7 +328,7 @@ public class PuzzleTileHex : Node2D
 
     void PathIncrement (int pathID)
     {
-        GD.Print($"Path {pathID} grew longer");
+        GD.Print($"Incrementing path {pathID}");
     }
 
     static HexCoord[] directions = {
@@ -424,8 +431,5 @@ public class PuzzleTileHex : Node2D
         definition[0] = Constrain(tmp + 1);
     }
 
-    void PrintPath ()
-    {
-        GD.Print($"{Name} has connections {LineDescriptions[0]}{LineDescriptions[1]}{LineDescriptions[2]}{LineDescriptions[3]}{LineDescriptions[4]}{LineDescriptions[5]}");
-    }
+    string GetPathString () => $"{LineDescriptions[0]}{LineDescriptions[1]}{LineDescriptions[2]}{LineDescriptions[3]}{LineDescriptions[4]}{LineDescriptions[5]}";
 }
