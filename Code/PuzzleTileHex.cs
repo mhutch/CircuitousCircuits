@@ -15,14 +15,9 @@ public class PuzzleTileHex : Node2D
 
     Puzzle puzzle;
 
-    public PuzzleTileHex (Puzzle puzzle)
-    {
-        this.puzzle = puzzle;
-    }
-
     public override void _Ready()
     {
-        base._Ready();
+        puzzle = (Puzzle)GetParent().GetParent();
 
         background = AddSprite(Resources.Textures.Tile);
 
@@ -353,8 +348,19 @@ public class PuzzleTileHex : Node2D
 
     void OnFail()
     {
-        puzzle.SoundPlayerFail.Play(09);
-        puzzle.ResetLevel();
+        var timer = AddChild2(new Timer { OneShot = true });
+        timer.Connect("timeout", puzzle, nameof(puzzle.ResetLevel));
+        timer.Start(1f);
+
+        puzzle.SoundPlayerFail.Play(0);
+
+        foreach (var tile in puzzle.Map.GetAllTiles<PuzzleTileHex>())
+        {
+            snapTween.InterpolateProperty(
+                tile.background, "modulate", null, Colors.DarkGray, 1f,
+                Tween.TransitionType.Sine, Tween.EaseType.In);
+            snapTween.Start();
+        }
     }
 
     void PathIncrement (int pathID)
@@ -481,7 +487,7 @@ public class PuzzleTileHex : Node2D
         {
             RotateDefinitionRight(def);
         }
-        return new PuzzleTileHex (puzzle) { LineDescriptions = def };
+        return new PuzzleTileHex { LineDescriptions = def };
     }
 
     static void RotateDefinitionRight(int[] definition)

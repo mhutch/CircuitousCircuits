@@ -259,7 +259,7 @@ public class Puzzle : Node2D
             //offset due to the map we're using to figure out positions
             int offset = Math.Max(0, 4 - boardSize);
             var coord = new HexCoord(q, r - offset);
-            var tile = new PuzzleTileHex (this) { LineDescriptions = desc, Position = coord.Position() };
+            var tile = new PuzzleTileHex { LineDescriptions = desc, Position = coord.Position() };
             map.SetCell(new CellInfo(coord, tile));
             board.AddChild(tile);
             tile.CalculatePaths(this, coord);

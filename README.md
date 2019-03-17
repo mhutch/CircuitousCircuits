@@ -21,7 +21,7 @@ Theme: Circuitous
 * ~~Music~~
 * ~~Sound effects~~
 * ~~Random tiles~~
-* Win/fail effect
+* ~~Win/fail effect~~
 * ~~Tile art~~
 * ~~Puzzles~~
 * ~~Win detection~~
@@ -32,6 +32,7 @@ Theme: Circuitous
 * ~~Splash screen~~
 * ~~quit button~~
 * ~~fullscreen~~
+* icon
 * tinting
 * color schemes
 
