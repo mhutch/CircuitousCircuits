@@ -13,6 +13,13 @@ public class PuzzleTileHex : Node2D
     Area2D dragArea;
     Tween snapTween;
 
+    Puzzle puzzle;
+
+    public PuzzleTileHex (Puzzle puzzle)
+    {
+        this.puzzle = puzzle;
+    }
+
     public override void _Ready()
     {
         base._Ready();
@@ -177,7 +184,6 @@ public class PuzzleTileHex : Node2D
         Position = GetViewport().GetMousePosition() / GlobalScale + mouseOffset;
         var coord = HexCoord.AtPosition(Position);
 
-        var puzzle = GetPuzzle();
         var mapCell = puzzle.Map.TryGetCell(coord);
         if (!IsValidDrop(mapCell))
         {
@@ -190,17 +196,13 @@ public class PuzzleTileHex : Node2D
 
     bool IsValidDrop(CellInfo? mapCell) => mapCell != null && !(mapCell.Value.Tile is PuzzleTileHex);
 
-    Puzzle GetPuzzle() => (Puzzle)GetParent().GetParent();
-
     void OnStartDrag()
     {
-        GetPuzzle().SoundPlayerPickup.Play(0);
+        puzzle.SoundPlayerPickup.Play(0);
     }
 
     void OnDrop()
     {
-        var puzzle = GetPuzzle();
-
         ZIndex = oldZIndex;
         puzzle.HideCursor();
 
@@ -209,12 +211,12 @@ public class PuzzleTileHex : Node2D
 
         if (!IsValidDrop(mapCell))
         {
-            GetPuzzle().SoundPlayerWhoosh.Play(0);
+            puzzle.SoundPlayerWhoosh.Play(0);
             puzzle.ResetTile(this);
             return;
         }
 
-        GetPuzzle().SoundPlayerDrop.Play(0);
+        puzzle.SoundPlayerDrop.Play(0);
 
         MakeFixed();
 
@@ -311,12 +313,12 @@ public class PuzzleTileHex : Node2D
         if (oldPath == newPath)
         {
             GD.Print($"PATH {newPath} IS A CIRCUIT");
-            GetPuzzle().SoundPlayerComplete.Play(0);
-            GetPuzzle().NextLevel();
+            puzzle.SoundPlayerComplete.Play(0);
+            puzzle.NextLevel();
             return newPath;
         }
 
-        foreach (var tile in GetPuzzle().Map.GetAllTiles<PuzzleTileHex>())
+        foreach (var tile in puzzle.Map.GetAllTiles<PuzzleTileHex>())
         {
             for (int i = 0; i < 6; i++)
             {
@@ -356,7 +358,7 @@ public class PuzzleTileHex : Node2D
 
     public void RotateRight()
     {
-        GetPuzzle().SoundPlayerRotate.Play(0);
+        puzzle.SoundPlayerRotate.Play(0);
 
         rotations++;
         RotateDefinitionRight(LineDescriptions);
@@ -365,7 +367,7 @@ public class PuzzleTileHex : Node2D
 
     public void RotateLeft()
     {
-        GetPuzzle().SoundPlayerRotate.Play(0);
+        puzzle.SoundPlayerRotate.Play(0);
 
         rotations--;
         int tmp = LineDescriptions[0];
@@ -413,7 +415,7 @@ public class PuzzleTileHex : Node2D
 
     static Random random = new Random();
 
-    public static PuzzleTileHex GetRandomTile()
+    public static PuzzleTileHex GetRandomTile(Puzzle puzzle)
     {
         var idx = random.Next(0, tilesDefinitions.Length - 1);
         var def = (int[])tilesDefinitions[idx].Clone();
@@ -422,7 +424,7 @@ public class PuzzleTileHex : Node2D
         {
             RotateDefinitionRight(def);
         }
-        return new PuzzleTileHex { LineDescriptions = def };
+        return new PuzzleTileHex (puzzle) { LineDescriptions = def };
     }
 
     static void RotateDefinitionRight(int[] definition)

@@ -26,7 +26,8 @@ Theme: Circuitous
 * ~~Puzzles~~
 * ~~Win detection~~
 * Fail detection
-* Level system
+* ~~Level system~~
+* Scaling/centering
 * Game name
 * Splash screen
 * quit button

@@ -70,4 +70,7 @@ public class HexMap
             }
         }
     }
+
+    public int Size => map.Length + 1;
+    public int EdgeSize => (map.Length + 1) / 2;
 }

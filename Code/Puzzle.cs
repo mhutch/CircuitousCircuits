@@ -5,7 +5,6 @@ using Settworks.Hexagons;
 public class Puzzle : Node2D
 {
     const int levelCount = 10;
-    public const float PuzzleScale = 50;
 
     Sprite hexCursor;
     Tween snapTween;
@@ -22,9 +21,6 @@ public class Puzzle : Node2D
 
     public override void _Ready()
     {
-        Scale = new Vector2 (PuzzleScale, PuzzleScale);
-        Position = new Vector2(0, PuzzleScale * 1.5f);
-
         base._Ready();
 
         CreateCursor();
@@ -102,7 +98,7 @@ public class Puzzle : Node2D
 
     public void SpawnTile ()
     {
-        var x = PuzzleTileHex.GetRandomTile();
+        var x = PuzzleTileHex.GetRandomTile(this);
         x.MakeDraggable();
         x.Name = $"tile_{tileID++}";
         x.Position = spawnCoord.Position();
@@ -246,17 +242,35 @@ public class Puzzle : Node2D
             //offset due to the map we're using to figure out positions
             int offset = Math.Max(0, 4 - boardSize);
             var coord = new HexCoord(q, r - offset);
-            var tile = new PuzzleTileHex { LineDescriptions = desc, Position = coord.Position() };
+            var tile = new PuzzleTileHex (this) { LineDescriptions = desc, Position = coord.Position() };
             map.SetCell(new CellInfo(coord, tile));
             board.AddChild(tile);
             tile.CalculatePaths(this, coord);
         }
+
+        Rescale();
     }
 
     public void NextLevel()
     {
         currentLevel = (currentLevel % levelCount) + 1;
-        LoadLevel(++currentLevel);
+        LoadLevel(currentLevel);
+    }
+
+    public void Rescale ()
+    {
+        var rect = GetViewportRect();
+
+        //scale such that the puzzle fits with a half tile margin
+
+        var radius = rect.Size.y /((map.Size * 0.75f + 0.25f) + 1f) / 2f;
+        Scale = new Vector2(radius, radius);
+
+        var center = new HexCoord(map.EdgeSize - 1, map.EdgeSize - 1);
+        var centerPos = center.Position() * Scale;
+        var centerScreen = new Vector2(rect.Size.x / 2f, rect.Size.y / 2f);
+
+        Position = centerScreen - centerPos;
     }
 }
 
