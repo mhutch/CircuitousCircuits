@@ -41,6 +41,9 @@ public class PuzzleTileHex : Node2D
 
     public int[] LineDescriptions = new int[6];
     public int[] Paths = new int[6];
+    readonly Sprite[] pathSprites = new Sprite[6];
+
+    public Sprite GetPathSprite(int index) => pathSprites[(index - rotations + 6000000) % 6];
 
     Sprite AddSprite(Texture texture, int zindex = 0)
     {
@@ -92,6 +95,8 @@ public class PuzzleTileHex : Node2D
 
             var s = AddSprite(texture, i);
             s.Rotation = rot * Mathf.Pi / 3f;
+
+            pathSprites[i] = s;
         }
     }
 
@@ -228,8 +233,7 @@ public class PuzzleTileHex : Node2D
 
         if (puzzle.Map.TileCount == puzzle.Map.CellCount)
         {
-            puzzle.SoundPlayerFail.Play(09);
-            puzzle.ResetLevel();
+            OnFail();
         }
     }
 
@@ -319,8 +323,7 @@ public class PuzzleTileHex : Node2D
         if (oldPath == newPath)
         {
             GD.Print($"PATH {newPath} IS A CIRCUIT");
-            puzzle.SoundPlayerComplete.Play(0);
-            puzzle.NextLevel();
+            OnSuccess(newPath);
             return newPath;
         }
 
@@ -338,9 +341,54 @@ public class PuzzleTileHex : Node2D
         return newPath;
     }
 
+    void OnSuccess(int path)
+    {
+        var timer = CreateTimer(2f);
+        timer.Connect("timeout", puzzle, nameof(puzzle.NextLevel));
+        timer.Start();
+
+        puzzle.SoundPlayerComplete.Play(0);
+        TintPath(path, Colors.Yellow);
+    }
+
+    void OnFail()
+    {
+        puzzle.SoundPlayerFail.Play(09);
+        puzzle.ResetLevel();
+    }
+
+    Timer CreateTimer(float delay)
+    {
+        var timer = new Timer
+        {
+            OneShot = true,
+            WaitTime = delay
+        };
+        AddChild(timer);
+        return timer;
+    }
+
     void PathIncrement (int pathID)
     {
         GD.Print($"Incrementing path {pathID}");
+    }
+
+    void TintPath(int pathID, Color color)
+    {
+        foreach (var tile in puzzle.Map.GetAllTiles<PuzzleTileHex>())
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                if (tile.Paths[i] == pathID)
+                {
+                    var sprite = tile.GetPathSprite(i);
+                    if (sprite != null)
+                    {
+                        sprite.Modulate = color;
+                    }
+                }
+            }
+        }
     }
 
     static HexCoord[] directions = {
