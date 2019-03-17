@@ -21,8 +21,6 @@ public class Puzzle : Node2D
 
     public override void _Ready()
     {
-        base._Ready();
-
         CreateCursor();
 
         snapTween = new Tween();
@@ -33,6 +31,24 @@ public class Puzzle : Node2D
         StartMusic();
 
         LoadLevel(1);
+
+        GetViewport().Connect("size_changed", this, nameof(Rescale));
+    }
+
+    public override void _Process(float delta)
+    {
+        if (Input.IsActionJustPressed("fullscreen"))
+        {
+            OS.WindowFullscreen = !OS.WindowFullscreen;
+        }
+        else if (Input.IsActionJustPressed("back"))
+        {
+            GetTree().Quit();
+        }
+        else if (Input.IsActionJustPressed("reset"))
+        {
+            LoadLevel(currentLevel);
+        }
     }
 
     void CreateCursor ()
@@ -198,6 +214,7 @@ public class Puzzle : Node2D
         }
         board = new Node2D();
         AddChild(board);
+        HideCursor();
 
         map = new HexMap(size);
         map.Initialize(c => new CellInfo(c, AddBoardCell(c)));
