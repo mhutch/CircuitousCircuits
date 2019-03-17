@@ -4,17 +4,21 @@ using Settworks.Hexagons;
 
 public class Puzzle : Node2D
 {
+    const int levelCount = 10;
     public const float PuzzleScale = 50;
 
     Sprite hexCursor;
     Tween snapTween;
 
-    readonly HexCoord spawnCoord = new HexCoord(8, 0);
-
-    public HexMap Map { get; private set; }
+    public HexMap Map => map;
+    public int GetNextPathId() => nextPathId++;
 
     int nextPathId = 1;
-    public int GetNextPathId() => nextPathId++;
+    HexCoord spawnCoord;
+    Node2D board;
+    HexMap map;
+
+    int currentLevel;
 
     public override void _Ready()
     {
@@ -25,17 +29,14 @@ public class Puzzle : Node2D
 
         CreateCursor();
 
-        Map = new HexMap(4);
-        Map.Initialize(c => new CellInfo(c, AddBoardCell (c)));
-
         snapTween = new Tween();
         AddChild(snapTween);
-
-        SpawnTile();
 
         InitializeSound();
         LoadMusic();
         StartMusic();
+
+        LoadLevel(1);
     }
 
     void CreateCursor ()
@@ -67,7 +68,7 @@ public class Puzzle : Node2D
             ZIndex = (int)ZLayers.Background,
             Position = c.Position()
         };
-        AddChild(s);
+        board.AddChild(s);
         return s;
     }
 
@@ -102,9 +103,10 @@ public class Puzzle : Node2D
     public void SpawnTile ()
     {
         var x = PuzzleTileHex.GetRandomTile();
+        x.MakeDraggable();
         x.Name = $"tile_{tileID++}";
         x.Position = spawnCoord.Position();
-        AddChild(x);
+        board.AddChild(x);
     }
 
     public void ResetTile(PuzzleTileHex tile) => SnapTileToCell(tile, spawnCoord);
@@ -187,6 +189,75 @@ public class Puzzle : Node2D
     public AudioStreamPlayer SoundPlayerPickup { get; private set; }
     public AudioStreamPlayer SoundPlayerComplete { get; private set; }
     public AudioStreamPlayer SoundPlayerFail { get; private set; }
+
+    void CreateLevel(int size)
+    {
+        //reset everything
+        nextPathId = 1;
+        map = null;
+        if (board != null)
+        {
+            RemoveChild(board);
+            board.QueueFree();
+        }
+        board = new Node2D();
+        AddChild(board);
+
+        map = new HexMap(size);
+        map.Initialize(c => new CellInfo(c, AddBoardCell(c)));
+
+        spawnCoord = new HexCoord(size * 2, 0);
+        SpawnTile();
+    }
+
+    void LoadLevel (int number)
+    {
+        currentLevel = number;
+
+        //GODOT: how on earth do I load a text file?
+        //var resource = GD.Load($"res://Levels/{number}.txt");
+
+        var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine("Levels", $"{number}.txt"));
+        int boardSize = int.Parse(lines[0]);
+
+        CreateLevel(boardSize);
+
+        for (int i = 1; i < lines.Length; i++)
+        {
+            var line = lines[i];
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                continue;
+            }
+
+            int commaIdx = line.IndexOf(',');
+            int q = int.Parse(line.Substring(0,commaIdx));
+
+            var pipeIdx = line.IndexOf('|');
+            int r = int.Parse(line.Substring(commaIdx + 1, pipeIdx - commaIdx - 1));
+
+
+            int[] desc = new int[6];
+            for (int j = 0; j < 6; j++)
+            {
+                desc[j] = line[pipeIdx+ 1+j] - '0';
+            }
+
+            //offset due to the map we're using to figure out positions
+            int offset = Math.Max(0, 4 - boardSize);
+            var coord = new HexCoord(q, r - offset);
+            var tile = new PuzzleTileHex { LineDescriptions = desc, Position = coord.Position() };
+            map.SetCell(new CellInfo(coord, tile));
+            board.AddChild(tile);
+            tile.CalculatePaths(this, coord);
+        }
+    }
+
+    public void NextLevel()
+    {
+        currentLevel = (currentLevel % levelCount) + 1;
+        LoadLevel(++currentLevel);
+    }
 }
 
 enum ZLayers

@@ -24,7 +24,8 @@ Theme: Circuitous
 * Win/fail effect
 * ~~Tile art~~
 * ~~Puzzles~~
-* Win/fail detection
+* ~~Win detection~~
+* Fail detection
 * Level system
 * Game name
 * Splash screen

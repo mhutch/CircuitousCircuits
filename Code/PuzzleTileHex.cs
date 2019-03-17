@@ -21,8 +21,6 @@ public class PuzzleTileHex : Node2D
 
         ZIndex = (int)ZLayers.DroppedTile;
 
-        MakeDraggable();
-
         snapTween = new Tween();
         AddChild(snapTween);
 
@@ -192,7 +190,7 @@ public class PuzzleTileHex : Node2D
 
     bool IsValidDrop(CellInfo? mapCell) => mapCell != null && !(mapCell.Value.Tile is PuzzleTileHex);
 
-    Puzzle GetPuzzle() => (Puzzle)GetParent();
+    Puzzle GetPuzzle() => (Puzzle)GetParent().GetParent();
 
     void OnStartDrag()
     {
@@ -224,6 +222,11 @@ public class PuzzleTileHex : Node2D
         puzzle.SnapTileToCell(this, coord);
         puzzle.SpawnTile();
 
+        CalculatePaths(puzzle, coord);
+    }
+
+    public void CalculatePaths(Puzzle puzzle, HexCoord coord)
+    {
         GD.Print($"Placing tile {Name} ({GetPathString()})");
 
         //propagate neighbor paths
@@ -307,8 +310,9 @@ public class PuzzleTileHex : Node2D
     {
         if (oldPath == newPath)
         {
-            GD.Print("PATH 1 IS A CIRCUIT");
+            GD.Print($"PATH {newPath} IS A CIRCUIT");
             GetPuzzle().SoundPlayerComplete.Play(0);
+            GetPuzzle().NextLevel();
             return newPath;
         }
 
