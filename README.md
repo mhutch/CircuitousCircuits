@@ -32,9 +32,10 @@ Theme: Circuitous
 * ~~Splash screen~~
 * ~~quit button~~
 * ~~fullscreen~~
-* icon
+* ~~icon~~
 * tinting
 * color schemes
+* animate appearing tiles
 
 stretch:
 

@@ -15,9 +15,9 @@ _global_script_class_icons={
 
 [application]
 
-config/name="New Game Project"
+config/name="Circuitous Circuits"
 run/main_scene="res://Splash.tscn"
-config/icon="res://icon.png"
+config/icon="res://Textures/Icon.png"
 
 [display]
 
