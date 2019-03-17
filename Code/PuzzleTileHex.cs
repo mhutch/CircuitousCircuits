@@ -343,12 +343,12 @@ public class PuzzleTileHex : Node2D
 
     void OnSuccess(int path)
     {
-        var timer = CreateTimer(2f);
+        var timer = AddChild2(new Timer { OneShot = true });
         timer.Connect("timeout", puzzle, nameof(puzzle.NextLevel));
-        timer.Start();
+        timer.Start(2f);
 
         puzzle.SoundPlayerComplete.Play(0);
-        TintPath(path, Colors.Yellow);
+        TintPath(path, Colors.Yellow, 1f);
     }
 
     void OnFail()
@@ -357,23 +357,12 @@ public class PuzzleTileHex : Node2D
         puzzle.ResetLevel();
     }
 
-    Timer CreateTimer(float delay)
-    {
-        var timer = new Timer
-        {
-            OneShot = true,
-            WaitTime = delay
-        };
-        AddChild(timer);
-        return timer;
-    }
-
     void PathIncrement (int pathID)
     {
         GD.Print($"Incrementing path {pathID}");
     }
 
-    void TintPath(int pathID, Color color)
+    void TintPath(int pathID, Color color, float pulseTime = 0f)
     {
         foreach (var tile in puzzle.Map.GetAllTiles<PuzzleTileHex>())
         {
@@ -384,7 +373,21 @@ public class PuzzleTileHex : Node2D
                     var sprite = tile.GetPathSprite(i);
                     if (sprite != null)
                     {
-                        sprite.Modulate = color;
+                        if (pulseTime == 0f)
+                        {
+                            sprite.Modulate = color;
+                        }
+                        else
+                        {
+                            var initial = sprite.Modulate;
+                            snapTween.InterpolateProperty(
+                                sprite, "modulate", null, color, pulseTime/2f,
+                                Tween.TransitionType.Sine, Tween.EaseType.Out);
+                            snapTween.InterpolateProperty(
+                                sprite, "modulate", color, initial, pulseTime/2f,
+                                Tween.TransitionType.Sine, Tween.EaseType.In, pulseTime / 2f);
+                            snapTween.Start();
+                        }
                     }
                 }
             }
@@ -492,4 +495,11 @@ public class PuzzleTileHex : Node2D
     }
 
     string GetPathString () => $"{LineDescriptions[0]}{LineDescriptions[1]}{LineDescriptions[2]}{LineDescriptions[3]}{LineDescriptions[4]}{LineDescriptions[5]}";
+
+    //GODOT: this cleans up code a lot
+    T AddChild2<T>(T child) where T : Node
+    {
+        AddChild(child);
+        return child;
+    }
 }
