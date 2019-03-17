@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/TileCursor.png-9c859c7ab41c298d206de1dea62111e5.stex"
+path="res://.import/smallCurve_thin.png-db45283b435149e105de454a47a9c5f5.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Tiles/TileCursor.png"
-dest_files=[ "res://.import/TileCursor.png-9c859c7ab41c298d206de1dea62111e5.stex" ]
+source_file="res://Textures/old thin lines/smallCurve_thin.png"
+dest_files=[ "res://.import/smallCurve_thin.png-db45283b435149e105de454a47a9c5f5.stex" ]
 
 [params]
 

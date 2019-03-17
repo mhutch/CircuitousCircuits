@@ -43,7 +43,7 @@ public class Puzzle : Node2D
         }
         else if (Input.IsActionJustPressed("back"))
         {
-            GetTree().Quit();
+            GetTree().ChangeScene("res://Splash.tscn");//.Quit();
         }
         else if (Input.IsActionJustPressed("reset"))
         {

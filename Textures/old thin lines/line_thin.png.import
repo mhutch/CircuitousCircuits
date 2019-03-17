@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/TileOverlay.png-3605903410dd2fd1604d6ffd7f823508.stex"
+path="res://.import/line_thin.png-45f566ae0113d9526c24f59a020206ee.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Tiles/TileOverlay.png"
-dest_files=[ "res://.import/TileOverlay.png-3605903410dd2fd1604d6ffd7f823508.stex" ]
+source_file="res://Textures/old thin lines/line_thin.png"
+dest_files=[ "res://.import/line_thin.png-45f566ae0113d9526c24f59a020206ee.stex" ]
 
 [params]
 

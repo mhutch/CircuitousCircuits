@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/smallCurve.png-400c5a0115d9ec6cd6fa48d5b16a3d0d.stex"
+path="res://.import/stop_thin.png-86ab42c8c442cfad4362cffcb9a9e329.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Tiles/smallCurve.png"
-dest_files=[ "res://.import/smallCurve.png-400c5a0115d9ec6cd6fa48d5b16a3d0d.stex" ]
+source_file="res://Textures/old thin lines/stop_thin.png"
+dest_files=[ "res://.import/stop_thin.png-86ab42c8c442cfad4362cffcb9a9e329.stex" ]
 
 [params]
 

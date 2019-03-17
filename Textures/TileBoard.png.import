@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/largeCurve_thin.png-12d65e3d145da3af965636b966b3e028.stex"
+path="res://.import/TileBoard.png-32acc6cdd5519210e8fea18e87bdd2cc.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Tiles/old thin lines/largeCurve_thin.png"
-dest_files=[ "res://.import/largeCurve_thin.png-12d65e3d145da3af965636b966b3e028.stex" ]
+source_file="res://Textures/TileBoard.png"
+dest_files=[ "res://.import/TileBoard.png-32acc6cdd5519210e8fea18e87bdd2cc.stex" ]
 
 [params]
 
