@@ -9,6 +9,9 @@ public static class Resources
         public static Texture Tile = GD.Load<Texture>("res://Textures/HexTile.png");
         public static Texture Board = GD.Load<Texture>("res://Textures/TileBoard.png");
         public static Texture Cursor = GD.Load<Texture>("res://Textures/TileCursor.png");
+        public static Texture TileUnsaturated = GD.Load<Texture>("res://Textures/HexTileUnsaturated.png");
+        public static Texture BoardUnsaturated = GD.Load<Texture>("res://Textures/TileBoardUnsaturated.png");
+        public static Texture CursorUnsaturated = GD.Load<Texture>("res://Textures/TileCursorUnsaturated.png");
         public static Texture CurveLarge = GD.Load<Texture>("res://Textures/largeCurve.png");
         public static Texture CurveSmall = GD.Load<Texture>("res://Textures/smallCurve.png");
         public static Texture Line = GD.Load<Texture>("res://Textures/line.png");

@@ -15,11 +15,14 @@ public class PuzzleTileHex : Node2D
 
     Puzzle puzzle;
 
+    public bool IsStatic { get; set; }
+
     public override void _Ready()
     {
         puzzle = (Puzzle)GetParent().GetParent();
 
-        background = AddSprite(Resources.Textures.Tile);
+        background = AddSprite(Resources.Textures.TileUnsaturated);
+        background.Modulate = IsStatic? puzzle.StaticTileColor : puzzle.TileColor;
 
         ZIndex = (int)ZLayers.DroppedTile;
 
@@ -335,6 +338,8 @@ public class PuzzleTileHex : Node2D
         GD.Print($"Path {oldPath} was consumed by path {newPath}");
         return newPath;
     }
+
+    bool isEnded;
 
     void OnSuccess(int path)
     {

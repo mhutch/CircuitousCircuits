@@ -19,6 +19,10 @@ public class Puzzle : Node2D
 
     int currentLevel;
 
+    public Color TileColor { get; private set; } = Colors.Red;
+    public Color StaticTileColor { get; private set; } = Colors.DarkRed;
+    public Color BoardColor { get; private set; } = Colors.Blue;
+
     public override void _Ready()
     {
         CreateCursor();
@@ -260,10 +264,15 @@ public class Puzzle : Node2D
             int offset = Math.Max(0, 4 - boardSize);
             var coord = new HexCoord(q, r - offset);
             var tile = new PuzzleTileHex { LineDescriptions = desc, Position = coord.Position() };
+            tile.IsStatic = true;
             map.SetCell(new CellInfo(coord, tile));
             board.AddChild(tile);
             tile.CalculatePaths(this, coord);
         }
+
+        var c = TileColor;
+        c.a = 0.6f;
+        hexCursor.Modulate = c;
 
         Rescale();
     }
