@@ -22,6 +22,8 @@ public class Puzzle : Node2D
     public Color TileColor { get; private set; } = Colors.Red;
     public Color StaticTileColor { get; private set; } = Colors.DarkRed;
     public Color BoardColor { get; private set; } = Colors.Blue;
+    public Color BackgroundColor { get; private set; } = Colors.DarkGray;
+    public Color LineHighlightColor { get; private set; } = Colors.Yellow;
 
     public override void _Ready()
     {
@@ -73,7 +75,7 @@ public class Puzzle : Node2D
 
     Sprite AddBoardCell (HexCoord c)
     {
-        var texture = Resources.Textures.Board;
+        var texture = Resources.Textures.BoardUnsaturated;
         var textureHeight = texture.GetHeight();
         float scale = 2f / textureHeight;
 
@@ -82,7 +84,8 @@ public class Puzzle : Node2D
             Texture = texture,
             Scale = new Vector2(scale, scale),
             ZIndex = (int)ZLayers.Background,
-            Position = c.Position()
+            Position = c.Position(),
+            Modulate = BoardColor
         };
         board.AddChild(s);
         return s;
@@ -235,7 +238,27 @@ public class Puzzle : Node2D
         //var resource = GD.Load($"res://Levels/{number}.txt");
 
         var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine("Levels", $"{number}.txt"));
-        int boardSize = int.Parse(lines[0]);
+
+        var boardDef = lines[0].Split('|');
+        int boardSize = int.Parse(boardDef[0]);
+        if (boardDef.Length == 6)
+        {
+            TileColor = new Color(boardDef[1]);
+            StaticTileColor = new Color(boardDef[2]);
+            BoardColor = new Color(boardDef[3]);
+            BackgroundColor = new Color(boardDef[4]);
+            LineHighlightColor = new Color(boardDef[5]);
+        }
+        else
+        {
+            TileColor = new Color("e017c2");
+            StaticTileColor = new Color("e017c2");
+            BoardColor = new Color("d0f3f1");
+            BackgroundColor = Colors.DarkGray;
+            LineHighlightColor = Colors.Yellow;
+        }
+
+        VisualServer.SetDefaultClearColor(BackgroundColor);
 
         CreateLevel(boardSize);
 

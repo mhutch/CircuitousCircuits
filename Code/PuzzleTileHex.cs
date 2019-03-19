@@ -343,16 +343,28 @@ public class PuzzleTileHex : Node2D
 
     void OnSuccess(int path)
     {
+        if (isEnded)
+        {
+            return;
+        }
+        isEnded = true;
+
         var timer = AddChild2(new Timer { OneShot = true });
         timer.Connect("timeout", puzzle, nameof(puzzle.NextLevel));
         timer.Start(2f);
 
         puzzle.SoundPlayerComplete.Play(0);
-        TintPath(path, Colors.Yellow, 1f);
+        TintPath(path, puzzle.LineHighlightColor, 1f);
     }
 
     void OnFail()
     {
+        if (isEnded)
+        {
+            return;
+        }
+        isEnded = true;
+
         var timer = AddChild2(new Timer { OneShot = true });
         timer.Connect("timeout", puzzle, nameof(puzzle.ResetLevel));
         timer.Start(1f);

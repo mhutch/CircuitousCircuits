@@ -58,5 +58,17 @@
     <Compile Include="Code\Resources.cs" />
     <Compile Include="Code\Splash.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Levels\1.txt" />
+    <None Include="Levels\2.txt" />
+    <None Include="Levels\3.txt" />
+    <None Include="Levels\4.txt" />
+    <None Include="Levels\5.txt" />
+    <None Include="Levels\6.txt" />
+    <None Include="Levels\7.txt" />
+    <None Include="Levels\8.txt" />
+    <None Include="Levels\9.txt" />
+    <None Include="Levels\10.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
