@@ -170,7 +170,15 @@ public class Puzzle : Node2D
         {
             if (i < activeMusicLayerCount)
             {
+                if (musicLayers[i].IsPlaying())
+                {
+                    //GODOT: if one of the layers is still playing when we (re)start them all,
+                    //we get a loud click glitch. however, if we wait for all of them to finish
+                    //we sometimes get a slight gap.
+                    GD.Print($"Music layer {i} was out of sync");
+                }
                 musicLayers[i].Play(0);
+
             }
             else
             {
