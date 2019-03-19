@@ -374,9 +374,21 @@ public class PuzzleTileHex : Node2D
         foreach (var tile in puzzle.Map.GetAllTiles<PuzzleTileHex>())
         {
             snapTween.InterpolateProperty(
-                tile.background, "modulate", null, Colors.DarkGray, 1f,
+                tile.background, "modulate", null, puzzle.BackgroundColor, 1f,
                 Tween.TransitionType.Sine, Tween.EaseType.In);
             snapTween.Start();
+
+            for (int i = 0; i < 6; i++)
+            {
+                var s = tile.pathSprites[i];
+                if (s!= null)
+                {
+                    snapTween.InterpolateProperty(
+                        s, "modulate", null, puzzle.BackgroundColor, 1f,
+                        Tween.TransitionType.Sine, Tween.EaseType.In);
+                    snapTween.Start();
+                }
+            }
         }
     }
 
