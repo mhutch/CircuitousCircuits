@@ -21,7 +21,7 @@ public class PuzzleTileHex : Node2D
     {
         puzzle = (Puzzle)GetParent().GetParent();
 
-        background = AddSprite(Resources.Textures.TileUnsaturated);
+        background = AddSprite(Resources.Textures.Tile);
         background.Modulate = IsStatic? puzzle.StaticTileColor : puzzle.TileColor;
 
         ZIndex = (int)ZLayers.DroppedTile;
@@ -91,7 +91,7 @@ public class PuzzleTileHex : Node2D
                     throw new InvalidOperationException();
             }
 
-            var s = AddSprite(texture, i);
+            var s = AddSprite(texture, 1);
             s.Rotation = rot * Mathf.Pi / 3f;
 
             pathSprites[i] = s;
@@ -408,6 +408,7 @@ public class PuzzleTileHex : Node2D
                     var sprite = tile.GetPathSprite(i);
                     if (sprite != null)
                     {
+                        sprite.ZIndex = 2;
                         if (pulseTime == 0f)
                         {
                             sprite.Modulate = color;
@@ -416,11 +417,11 @@ public class PuzzleTileHex : Node2D
                         {
                             var initial = sprite.Modulate;
                             snapTween.InterpolateProperty(
-                                sprite, "modulate", null, color, pulseTime/2f,
-                                Tween.TransitionType.Sine, Tween.EaseType.Out);
+                                sprite, "modulate", null, color, pulseTime*.45f,
+                                Tween.TransitionType.Cubic, Tween.EaseType.Out);
                             snapTween.InterpolateProperty(
-                                sprite, "modulate", color, initial, pulseTime/2f,
-                                Tween.TransitionType.Sine, Tween.EaseType.In, pulseTime / 2f);
+                                sprite, "modulate", color, initial, pulseTime * .45f,
+                                Tween.TransitionType.Cubic, Tween.EaseType.In, pulseTime * .55f);
                             snapTween.Start();
                         }
                     }

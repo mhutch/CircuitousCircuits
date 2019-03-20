@@ -75,7 +75,7 @@ public class Puzzle : Node2D
 
     Sprite AddBoardCell (HexCoord c)
     {
-        var texture = Resources.Textures.BoardUnsaturated;
+        var texture = Resources.Textures.Tile;
         var textureHeight = texture.GetHeight();
         float scale = 2f / textureHeight;
 
@@ -88,6 +88,14 @@ public class Puzzle : Node2D
             Modulate = BoardColor
         };
         board.AddChild(s);
+        var overlay = new Sprite
+        {
+            Texture = Resources.Textures.BoardGradient,
+            Scale = new Vector2(scale, scale),
+            ZIndex = (int)ZLayers.Background+1,
+            Position = c.Position()
+        };
+        board.AddChild(overlay);
         return s;
     }
 
@@ -153,7 +161,6 @@ public class Puzzle : Node2D
             AddChild(player);
             musicLayers[i] = player;
         }
-
         musicLayers[0].Connect("finished", this, nameof(OnMusicFinished));
     }
 
@@ -252,17 +259,35 @@ public class Puzzle : Node2D
         if (boardDef.Length == 6)
         {
             TileColor = new Color(boardDef[1]);
-            StaticTileColor = new Color(boardDef[2]);
+
+            if (string.IsNullOrEmpty(boardDef[2]))
+            {
+                StaticTileColor = TileColor.Darkened(0.2f);
+            }
+            else
+            {
+                StaticTileColor = new Color(boardDef[2]);
+            }
+
             BoardColor = new Color(boardDef[3]);
-            BackgroundColor = new Color(boardDef[4]);
+
+            if (string.IsNullOrEmpty(boardDef[4]))
+            {
+                BackgroundColor = Colors.Black;
+            }
+            else
+            {
+                BackgroundColor = new Color(boardDef[4]);
+            }
+
             LineHighlightColor = new Color(boardDef[5]);
         }
         else
         {
             TileColor = new Color("e017c2");
-            StaticTileColor = new Color("e017c2");
-            BoardColor = new Color("d0f3f1");
-            BackgroundColor = Colors.DarkGray;
+            StaticTileColor = TileColor.Darkened(0.2f);
+            BoardColor = new Color("bdf0ec");
+            BackgroundColor = Colors.Black;
             LineHighlightColor = Colors.Yellow;
         }
 
