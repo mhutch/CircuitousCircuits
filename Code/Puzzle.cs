@@ -251,8 +251,16 @@ public class Puzzle : Node2D
 
         //GODOT: how on earth do I load a text file?
         //var resource = GD.Load($"res://Levels/{number}.txt");
-
-        var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine("Levels", $"{number}.txt"));
+        //this took 30mins to figure out. every operation is different than the
+        //C# BCL version and the docs are not helpful
+        var f = new File();
+        f.Open($"res://Levels/{number}.txt", (int)File.ModeFlags.Read);
+        var lines = new System.Collections.Generic.List<string>();
+        while(!f.EofReached())
+        {
+            lines.Add(f.GetLine());
+        }
+        //var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine("Levels", $"{number}.txt"));
 
         var boardDef = lines[0].Split('|');
         int boardSize = int.Parse(boardDef[0]);
@@ -295,7 +303,7 @@ public class Puzzle : Node2D
 
         CreateLevel(boardSize);
 
-        for (int i = 1; i < lines.Length; i++)
+        for (int i = 1; i < lines.Count; i++)
         {
             var line = lines[i];
             if (string.IsNullOrWhiteSpace(line))
