@@ -1,45 +1,21 @@
-# Train Jam 2019
+# Circuitous Circuits
 
-## Intro
+A [Train Jam 2019](https://itch.io/jam/train-jam-2019) game by Mikayla Hutchinson([@mjhutchinson](https://twitter.com/mjhutchinson))
+and Candy Emberley ([@CandyComposer](https://twitter.com/CandyComposer)).
 
-Theme: Circuitous
+Make the longest circuit that meets up with itself - a circuitous circuit!
 
-* Puzzle game about completing a circuit in the most number of steps possible
-* Carcassonne-like tile placement
-* Obstacles?
-* Random tiles?
-* Bad tiles?
+![Screenshot of the game](screenshot.png)
 
-## TODO
+Binaries are available [on itch.io](https://mhutch.itch.io/circuitous-circuits).
 
-* ~~Bootstrap~~
-* ~~Get drag and drop working~~
-* ~~Grid snapping~~
-* ~~Tile definitions~~
-* ~~Tile rotation~~
-* ~~Disallowed drops~~
-* ~~Music~~
-* ~~Sound effects~~
-* ~~Random tiles~~
-* ~~Win/fail effect~~
-* ~~Tile art~~
-* ~~Puzzles~~
-* ~~Win detection~~
-* ~~Fail detection~~
-* ~~Level system~~
-* ~~Scaling/centering~~
-* ~~Game name~~
-* ~~Splash screen~~
-* ~~quit button~~
-* ~~fullscreen~~
-* ~~icon~~
-* tinting
-* color schemes
-* animate appearing tiles
+NOTE: we didn't figure out how to measure or incentivize the *longest* circuit
+so currently *any* circuit is enough to advance to the next level.
 
-stretch:
+This game was made with [the Godot engine](https://godotengine.org/).
 
-* Keyboard controls?
-* Upcoming tile preview?
-* pulse circuit when complete
-  * all other lines disappear
+## License
+
+* Code by Mikayla Hutchinson, licensed under [the MIT license](https://opensource.org/licenses/MIT)
+* Music and sound by Candy Emberley, licensed under [the CC-BY-4.0 license](https://creativecommons.org/licenses/by/4.0/)
+* Art by Candy Emberley and Mikayla Hutchinson, licensed under [the CC-0 license](https://creativecommons.org/share-your-work/public-domain/cc0/)
